@@ -1,0 +1,2810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniSync - Academic Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --grey: #95a5a6;
+            --maths: #9b59b6;
+            --english: #e67e22;
+            --quant: #1abc9c;
+            --reasoning: #d35400;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Base styles remain the same */
+        body {
+            background: black;
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #ffffff11, transparent),
+                radial-gradient(2px 2px at 40px 70px, #ffffff11, transparent),
+                radial-gradient(1px 1px at 90px 40px, #ffffff11, transparent),
+                radial-gradient(1px 1px at 130px 80px, #ffffff11, transparent),
+                radial-gradient(2px 2px at 160px 30px, #ffffff11, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: sparkle 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        @keyframes sparkle {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100px); }
+        }
+        
+        /* DASHBOARD THEME - Digital/Holographic */
+        #dashboard .card {
+            background: linear-gradient(145deg, rgba(13, 71, 161, 0.1), rgba(25, 118, 210, 0.1));
+            border: 1px solid rgba(33, 150, 243, 0.3);
+            box-shadow: 0 8px 32px rgba(33, 150, 243, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #dashboard .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(33, 150, 243, 0.2), transparent);
+            animation: scan 3s infinite;
+        }
+        
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        #dashboard .stat-item {
+            background: linear-gradient(145deg, rgba(13, 71, 161, 0.2), rgba(25, 118, 210, 0.2));
+            border: 1px solid rgba(33, 150, 243, 0.4);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: all 0.3s ease;
+        }
+        
+        #dashboard .stat-item:hover {
+            transform: perspective(1000px) rotateX(0deg) translateY(-10px);
+            box-shadow: 0 20px 40px rgba(33, 150, 243, 0.3);
+        }
+        
+        /* TIMETABLE THEME - Matrix/Grid */
+        #timetable {
+            background: radial-gradient(ellipse at center, rgba(0, 255, 0, 0.05) 0%, transparent 70%);
+        }
+        
+        #timetable .card {
+            background: linear-gradient(145deg, rgba(0, 100, 0, 0.1), rgba(0, 150, 0, 0.1));
+            border: 1px solid greenyellow;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+        
+        #timetable .timetable-grid {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        
+        #timetable .timetable-cell {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: white;
+            font-family: 'Courier New', monospace;
+            transform: translateZ(0);
+            transition: all 0.3s ease;
+        }
+        
+        #timetable .timetable-cell:hover {
+            transform: translateZ(10px);
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        #timetable .timetable-cell.subject {
+            background: linear-gradient(45deg, rgba(0, 200, 0, 0.2), rgba(0, 255, 0, 0.2));
+            animation: pulse-green 2s infinite;
+        }
+        
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 5px rgba(0, 255, 0, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.6); }
+        }
+        
+        /* TASKS THEME - Paper/Sticky Notes */
+        #tasks {
+            background: transparent;
+        }
+        
+        #tasks .card {
+            background: linear-gradient(145deg, rgba(255, 193, 7, 0.1), rgba(255, 235, 59, 0.1));
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            transform: perspective(1000px) rotateY(-2deg);
+            box-shadow: 5px 5px 15px rgba(255, 193, 7, 0.2);
+        }
+        
+        #tasks .task-item {
+            background: linear-gradient(145deg, rgba(255, 235, 59, 0.1), rgba(255, 193, 7, 0.1));
+            margin: 0.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            transform: perspective(1000px) rotateX(2deg);
+            transition: all 0.3s ease;
+            border-left: 4px solid #ffeb3b;
+            position: relative;
+        }
+        
+        #tasks .task-item::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(255, 193, 7, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        #tasks .task-item:hover {
+            transform: perspective(1000px) rotateX(0deg) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 193, 7, 0.3);
+        }
+        
+        /* CALENDAR THEME - Space/Cosmic */
+        #calendar {
+            background: radial-gradient(ellipse at center, rgba(103, 58, 183, 0.1) 0%, transparent 70%);
+        }
+        
+        #calendar .card {
+            background: linear-gradient(145deg, rgba(63, 81, 181, 0.1), rgba(103, 58, 183, 0.1));
+            border: 1px solid rgba(103, 58, 183, 0.3);
+            box-shadow: 0 0 30px rgba(103, 58, 183, 0.2);
+        }
+        
+        #calendar .calendar-day {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(103, 58, 183, 0.3);
+            color: #bb86fc;
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
+        }
+        
+        #calendar .calendar-day:hover {
+            transform: translateZ(15px) rotateX(15deg);
+            background: linear-gradient(145deg, rgba(103, 58, 183, 0.3), rgba(63, 81, 181, 0.3));
+            box-shadow: 0 15px 25px rgba(103, 58, 183, 0.4);
+        }
+        
+        #calendar .calendar-day.active {
+            background: linear-gradient(145deg, rgba(103, 58, 183, 0.4), rgba(63, 81, 181, 0.4));
+            animation: cosmic-glow 2s infinite;
+        }
+        
+        @keyframes cosmic-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(103, 58, 183, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(103, 58, 183, 0.8), 0 0 35px rgba(63, 81, 181, 0.6); }
+        }
+        
+        /* RESOURCES THEME - Book Library */
+        #resources {
+            background: 
+                linear-gradient(45deg, rgba(121, 85, 72, 0.05) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(121, 85, 72, 0.05) 25%, transparent 25%);
+            background-size: 30px 30px;
+        }
+        
+        #resources .card {
+            background: linear-gradient(145deg, rgba(93, 64, 55, 0.1), rgba(121, 85, 72, 0.1));
+            border: 1px solid rgba(121, 85, 72, 0.3);
+            box-shadow: 5px 5px 20px rgba(62, 39, 35, 0.3);
+        }
+        
+        #resources .resource-card {
+            background: linear-gradient(145deg, rgba(121, 85, 72, 0.15), rgba(93, 64, 55, 0.15));
+            transform: perspective(1000px) rotateY(5deg);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #resources .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="10" y="20" width="8" height="60" rx="1" fill="%23a0815c" opacity="0.1"/><rect x="22" y="15" width="8" height="65" rx="1" fill="%23a0815c" opacity="0.1"/><rect x="34" y="18" width="8" height="62" rx="1" fill="%23a0815c" opacity="0.1"/></svg>') no-repeat center;
+            background-size: 80px 80px;
+            opacity: 0.1;
+            animation: book-sway 4s ease-in-out infinite;
+        }
+        
+        @keyframes book-sway {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(2deg); }
+        }
+        
+        #resources .resource-card:hover {
+            transform: perspective(1000px) rotateY(0deg) translateY(-10px);
+            box-shadow: 0 20px 40px rgba(121, 85, 72, 0.4);
+        }
+        
+        /* REMINDERS THEME - Neon/Alert */
+        #reminders {
+            background: radial-gradient(ellipse at center, rgba(255, 87, 34, 0.05) 0%, transparent 70%);
+        }
+        
+        #reminders .card {
+            background: linear-gradient(145deg, rgba(244, 67, 54, 0.1), rgba(255, 87, 34, 0.1));
+            border: 1px solid rgba(255, 87, 34, 0.3);
+            box-shadow: 0 0 20px rgba(255, 87, 34, 0.2);
+        }
+        
+        #reminders .event-item {
+            background: linear-gradient(145deg, rgba(255, 87, 34, 0.1), rgba(244, 67, 54, 0.1));
+            border-left: 4px solid #ff5722;
+            animation: reminder-pulse 3s infinite;
+            transform: perspective(1000px) rotateX(3deg);
+            transition: all 0.3s ease;
+        }
+        
+        @keyframes reminder-pulse {
+            0%, 100% { border-left-color: #ff5722; }
+            50% { border-left-color: #ff9800; box-shadow: -5px 0 15px rgba(255, 152, 0, 0.3); }
+        }
+        
+        #reminders .event-item:hover {
+            transform: perspective(1000px) rotateX(0deg) translateX(10px);
+        }
+        
+        /* ALARMS THEME - Digital Clock */
+        #alarms {
+            background: 
+                linear-gradient(0deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 25px 25px;
+        }
+        
+        #alarms .card {
+            background: linear-gradient(145deg, rgba(0, 188, 212, 0.1), rgba(0, 255, 255, 0.1));
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.1);
+        }
+        
+        #alarms .alarm-item {
+            background: linear-gradient(145deg, rgba(0, 0, 0, 0.4), rgba(0, 188, 212, 0.1));
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: all 0.3s ease;
+        }
+        
+        #alarms .alarm-time {
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            animation: digital-flicker 2s infinite;
+        }
+        
+        @keyframes digital-flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        #alarms .alarm-item:hover {
+            transform: perspective(1000px) rotateY(0deg) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        /* CAREER THEME - Professional/Golden */
+        #career {
+            background: radial-gradient(ellipse at center, rgba(255, 193, 7, 0.05) 0%, transparent 70%);
+        }
+        
+        #career .card {
+            background: linear-gradient(145deg, rgba(255, 193, 7, 0.1), rgba(255, 235, 59, 0.1));
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.2);
+        }
+        
+        #career .roadmap-step {
+            transform: perspective(1000px);
+            transition: all 0.4s ease;
+        }
+        
+        #career .roadmap-number {
+            background: linear-gradient(145deg, #ffc107, #ffeb3b);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+            animation: career-glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes career-glow {
+            0%, 100% { box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4); }
+            50% { box-shadow: 0 10px 25px rgba(255, 193, 7, 0.6), 0 0 20px rgba(255, 235, 59, 0.4); }
+        }
+        
+        #career .roadmap-step:hover {
+            transform: perspective(1000px) translateX(10px);
+        }
+        
+        /* PROFILE THEME - Elegant/Personal */
+        #profile {
+            background: radial-gradient(ellipse at center, rgba(156, 39, 176, 0.05) 0%, transparent 70%);
+        }
+        
+        #profile .card {
+            background: linear-gradient(145deg, rgba(156, 39, 176, 0.1), rgba(233, 30, 99, 0.1));
+            border: 1px solid rgba(156, 39, 176, 0.3);
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.2);
+        }
+        
+        #profile .profile-avatar {
+            background: linear-gradient(145deg, #9c27b0, #e91e63);
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.4);
+            animation: profile-rotate 10s linear infinite;
+        }
+        
+        @keyframes profile-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        #profile .fees-card {
+            background: linear-gradient(145deg, rgba(156, 39, 176, 0.2), rgba(233, 30, 99, 0.2));
+            transform: perspective(1000px) rotateX(5deg);
+            transition: all 0.3s ease;
+        }
+        
+        #profile .fees-card:hover {
+            transform: perspective(1000px) rotateX(0deg) translateY(-5px);
+        }
+        
+        /* Quiz Section Theme */
+        #quiz {
+            background: radial-gradient(ellipse at center, rgba(33, 150, 243, 0.1) 0%, transparent 70%);
+        }
+        
+        #quiz .card {
+            background: linear-gradient(145deg, rgba(13, 71, 161, 0.1), rgba(25, 118, 210, 0.1));
+            border: 1px solid rgba(33, 150, 243, 0.3);
+            box-shadow: 0 8px 32px rgba(33, 150, 243, 0.1);
+        }
+        
+        /* Notes Section Theme */
+        #notes {
+            background: linear-gradient(145deg, rgba(255, 193, 7, 0.1), rgba(255, 235, 59, 0.1));
+        }
+        
+        #notes .card {
+            background: linear-gradient(145deg, rgba(255, 235, 59, 0.1), rgba(255, 193, 7, 0.1));
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            box-shadow: 5px 5px 15px rgba(255, 193, 7, 0.2);
+        }
+        
+        .notes-canvas {
+            border: 1px solid #444;
+            background: white;
+        }
+        
+        .emoji-picker {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        /* Game Styles */
+        #gameArea {
+            display: none;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+        
+        #gameTimer {
+            font-size: 1.2rem;
+            color: var(--warning);
+        }
+        
+        .game-option {
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px;
+            background: #333;
+            border-radius: 5px;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0 15px;
+        }
+        
+        header {
+            background: black;
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: black;
+            overflow-x: auto;
+            padding: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 60px;
+            z-index: 90;
+        }
+        
+        .nav-tab {
+            padding: 0.5rem 1rem;
+            margin: 0 5px;
+            border-radius: 20px;
+            background: #333;
+            color: white;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .content-section {
+            display: none;
+            padding: 1rem;
+            animation: fadeIn 0.5s;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .card {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #444;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .attendance-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .present {
+            background: rgba(46, 204, 113, 0.2);
+            color: var(--secondary);
+        }
+        
+        .absent {
+            background: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+        }
+        
+        .subject-list {
+            list-style: none;
+        }
+        
+        .subject-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .subject-item:last-child {
+            border-bottom: none;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            border-radius: 4px;
+            background: var(--secondary);
+        }
+        
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 1rem;
+        }
+        
+        .calendar-day {
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .calendar-day.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .calendar-day.active.has-event::after {
+            background: white;
+        }
+        
+        .calendar-day.holiday {
+            color: var(--danger);
+            font-weight: bold;
+        }
+        
+        .event-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        
+        .event-item {
+            padding: 0.8rem;
+            border-left: 3px solid var(--primary);
+            background: rgba(52, 152, 219, 0.1);
+            margin-bottom: 0.5rem;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .event-item.exam {
+            border-left-color: var(--danger);
+            background: rgba(231, 76, 60, 0.1);
+        }
+        
+        .event-item.holiday {
+            border-left-color: var(--warning);
+            background: rgba(243, 156, 18, 0.1);
+        }
+        
+        .event-item.placement {
+            border-left-color: var(--secondary);
+            background: rgba(46, 204, 113, 0.1);
+        }
+        
+        .event-item.task {
+            border-left-color: var(--warning);
+            background: rgba(243, 156, 18, 0.1);
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #27ae60;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .clock-container {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .clock-display {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #222;
+            border-radius: 8px;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .subject-attendance {
+            margin-top: 1rem;
+        }
+        
+        .subject-attendance-item {
+            margin-bottom: 0.8rem;
+        }
+        
+        .subject-attendance-item span {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+        
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(5, 1fr);
+            gap: 1px;
+            background: #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .time-slot, .timetable-cell {
+            padding: 0.5rem;
+            background: #222;
+            text-align: center;
+            font-size: 0.8rem;
+            color: white;
+        }
+        
+        .time-slot {
+            background: #333;
+            font-weight: bold;
+        }
+        
+        .timetable-cell.subject {
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .timetable-cell.break {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .timetable-header {
+            background: #111;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .fees-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .fees-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .fees-status {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .fees-breakdown {
+            margin-top: 1rem;
+            color: white;
+        }
+        
+        .fees-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .roadmap-container {
+            position: relative;
+        }
+        
+        .roadmap-line {
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+            opacity: 0.3;
+        }
+        
+        .roadmap-step {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .roadmap-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .roadmap-content {
+            margin-left: 50px;
+            padding: 1rem;
+            background: #222;
+            border-radius: 8px;
+        }
+        
+        .roadmap-step.completed .roadmap-number {
+            background: var(--secondary);
+        }
+        
+        .roadmap-step.current .roadmap-number {
+            background: var(--warning);
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .profile-info h2 {
+            margin: 0;
+            color: white;
+        }
+        
+        .profile-info p {
+            margin: 0.2rem 0;
+            color: #ccc;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .resource-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #333;
+            color: white;
+        }
+        
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+        
+        .text-sm {
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .task-date {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+       /* Update quiz result colors for dark theme */
+        .quiz-result.correct {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid var(--secondary);
+            color: #2ecc71;
+        }
+        
+        .quiz-result.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger);
+            color: #e74c3c;
+        }
+        
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: #222;
+            padding: 1.5rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #444;
+        }
+        
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #ccc;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: white;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #444;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: #333;
+            color: white;
+        }
+        
+        .alarm-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        
+        .alarm-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: #222;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .alarm-time {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .alarm-label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .alarm-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .delete-alarm {
+            color: var(--danger);
+            cursor: pointer;
+        }
+        
+        .placement-highlight {
+            animation: pulse 2s infinite;
+            border: 2px solid var(--secondary);
+        }
+        
+        .subject-tag {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            color: white;
+        }
+        
+        .maths-tag {
+            background: var(--maths);
+        }
+        
+        .english-tag {
+            background: var(--english);
+        }
+        
+        .quant-tag {
+            background: var(--quant);
+        }
+        
+        .reasoning-tag {
+            background: var(--reasoning);
+        }
+        
+        .placement-roadmap {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            border-bottom: 1px solid #333;
+        }
+        
+        .task-checkbox {
+            margin-right: 10px;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-date {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            color: #aaa;
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .resource-card.maths {
+            border-left-color: var(--maths);
+        }
+        
+        .resource-card.english {
+            border-left-color: var(--english);
+        }
+        
+        .resource-card.quant {
+            border-left-color: var(--quant);
+        }
+        
+        .resource-card.reasoning {
+            border-left-color: var(--reasoning);
+        }
+        
+        .resource-card.placement {
+            border-left-color: var(--secondary);
+        }
+        
+        .resource-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .quiz-container {
+            background: #222;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .quiz-question {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .quiz-option {
+            padding: 0.5rem;
+            background: #333;
+            border: 1px solid #444;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .quiz-option:hover {
+            background: #444;
+        }
+        
+        .quiz-option.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .quiz-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .quiz-result.correct {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .quiz-result.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+        
+        /* Career tab interview content text color to black */
+        #career .resource-card {
+            color: black;
+        }
+        
+        #career .resource-card h4 {
+            color: black;
+        }
+        
+        #career .resource-card ul {
+            color: black;
+        }
+        
+        /* Profile section student roadmap text color to black */
+        #profile .roadmap-content {
+            color: black;
+        }
+        
+        #profile .roadmap-content h4 {
+            color: white;
+        }
+        
+        #profile .roadmap-content p {
+            color: white;
+        }
+        
+        #profile .roadmap-content .text-sm {
+            color: gold;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+                margin: 0 auto;
+            }
+            
+            .nav-tabs {
+                justify-content: center;
+            }
+            
+            .resource-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                max-width: 970px;
+            }
+            
+            .resource-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+     </style>
+</head>
+<body>
+    <header>
+        <div class="app-header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i> UniSync
+            </div>
+            <div class="header-icons">
+                <div class="clock-container" id="clockIcon">
+                    <div class="clock-display" id="currentTime">00:00:00</div>
+                </div>
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">8</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="nav-tabs">
+        <div class="nav-tab active" data-target="dashboard">
+            <i class="fas fa-home"></i> Dashboard
+        </div>
+        <div class="nav-tab" data-target="timetable">
+            <i class="fas fa-table"></i> Timetable
+        </div>
+        <div class="nav-tab" data-target="tasks">
+            <i class="fas fa-tasks"></i> Tasks
+        </div>
+        <div class="nav-tab" data-target="calendar">
+            <i class="fas fa-calendar"></i> Calendar
+        </div>
+        <div class="nav-tab" data-target="resources">
+            <i class="fas fa-book"></i> Resources
+        </div>
+        <div class="nav-tab" data-target="reminders">
+            <i class="fas fa-bell"></i> Reminders
+        </div>
+        <div class="nav-tab" data-target="alarms">
+            <i class="fas fa-alarm-clock"></i> Alarms
+        </div>
+        <div class="nav-tab" data-target="career">
+            <i class="fas fa-briefcase"></i> Placements
+        </div>
+        <div class="nav-tab" data-target="quiz">
+            <i class="fas fa-question-circle"></i> Quiz
+        </div>
+        <!--<div class="nav-tab" data-target="notes">
+            <i class="fas fa-sticky-note"></i> Notes
+        </div>-->
+        <div class="nav-tab" data-target="profile">
+            <i class="fas fa-user"></i> Profile
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Dashboard Section -->
+        <div class="content-section active" id="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Today's Classes</div>
+                    <div id="currentDate">Wed, Oct 18</div>
+                </div>
+                <ul class="subject-list">
+                    <li class="subject-item">
+                        <div>
+                            <div>Data Structures</div>
+                            <div class="text-sm">9:00 AM - 10:30 AM | Room 302</div>
+                        </div>
+                        <span class="attendance-badge present">Present</span>
+                    </li>
+                    <li class="subject-item">
+                        <div>
+                            <div>Algorithms</div>
+                            <div class="text-sm">11:00 AM - 12:30 PM | Room 405</div>
+                        </div>
+                        <span class="attendance-badge absent">Absent</span>
+                    </li>
+                    <li class="subject-item">
+                        <div>
+                            <div>Web Development</div>
+                            <div class="text-sm">2:00 PM - 3:30 PM | Lab 203</div>
+                        </div>
+                        <span class="attendance-badge present">Present</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Attendance Overview</div>
+                </div>
+                <div class="attendance-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: var(--secondary);">85%</div>
+                        <div class="stat-label">Overall Attendance</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: var(--primary);">68/80</div>
+                        <div class="stat-label">Classes Attended</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: var(--danger);">12</div>
+                        <div class="stat-label">Classes Missed</div>
+                    </div>
+                </div>
+                <div class="subject-attendance">
+                    <div class="subject-attendance-item">
+                        <span>Data Structures: 90% (18/20)</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <div class="subject-attendance-item">
+                        <span>Algorithms: 80% (16/20)</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    <div class="subject-attendance-item">
+                        <span>Web Development: 85% (17/20)</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="subject-attendance-item">
+                        <span>Database Systems: 75% (15/20)</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 75%; background: var(--warning);"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="subject-attendance" style="margin-top: 1rem;">
+                    <h4>Missed Classes</h4>
+                    <ul>
+                        <li>Algorithms - Monday, Sep 15, 2025</li>
+                        <li>Data Structures - Wednesday, Sep 10, 2025</li>
+                        <li>Web Development - Friday, Sep 5, 2025</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Upcoming Events</div>
+                </div>
+                <ul class="event-list">
+                    <li class="event-item exam">
+                        <div><strong>Midterm Exams</strong></div>
+                        <div>Starts: Oct 25, 2023</div>
+                    </li>
+                    <li class="event-item placement placement-highlight">
+                        <div><strong>Amazon Placement Drive</strong></div>
+                        <div>Nov 20, 2023 | Register by Nov 10</div>
+                    </li>
+                    <li class="event-item">
+                        <div><strong>Project Submission</strong></div>
+                        <div>Due: Oct 20, 2023 | Web Development</div>
+                    </li>
+                    <li class="event-item holiday">
+                        <div><strong>Diwali Break</strong></div>
+                        <div>Nov 12 - Nov 16, 2023</div>
+                    </li>
+                </ul>
+            </div>
+             <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Educational Crossword Puzzle Game</div>
+                </div>
+                <button class="btn btn-primary" id="startGame">Play Crossword (10 min limit per hour)</button>
+                <div id="gameArea">
+                    <div id="gameTimer">Time left: 15:00</div>
+                    <h3>Academic Crossword Puzzle - Solve 15 words</h3>
+                    <p>Solve the clues below. Words are related to computer science and academics.</p>
+                    <div class="crossword-clues">
+                        <div class="clue-section">
+                            <h4>Horizontal Clues</h4>
+                            <div class="clue-item">1. A step-by-step procedure (9 letters): <input type="text" class="clue-input" data-answer="algorithm"></div>
+                            <div class="clue-item">2. Collection of data (4 letters): <input type="text" class="clue-input" data-answer="data"></div>
+                            <div class="clue-item">3. Organized way to store data (9 letters): <input type="text" class="clue-input" data-answer="structure"></div>
+                            <div class="clue-item">4. Binary choice (3 letters): <input type="text" class="clue-input" data-answer="bit"></div>
+                            <div class="clue-item">5. Programming language like Python (6 letters): <input type="text" class="clue-input" data-answer="script"></div>
+                            <div class="clue-item">6. Fast sorting method (7 letters): <input type="text" class="clue-input" data-answer="quicksort"></div>
+                            <div class="clue-item">7. Database query language (4 letters): <input type="text" class="clue-input" data-answer="sql"></div>
+                            <div class="clue-item">8. Network protocol (3 letters): <input type="text" class="clue-input" data-answer="http"></div>
+                        </div>
+                        <div class="clue-section">
+                            <h4>Vertical Clues</h4>
+                            <div class="clue-item">1. Memory storage unit (4 letters): <input type="text" class="clue-input" data-answer="byte"></div>
+                            <div class="clue-item">2. Operating system example (7 letters): <input type="text" class="clue-input" data-answer="windows"></div>
+                            <div class="clue-item">3. Web development framework (5 letters): <input type="text" class="clue-input" data-answer="react"></div>
+                            <div class="clue-item">4. Logic gate (3 letters): <input type="text" class="clue-input" data-answer="and"></div>
+                            <div class="clue-item">5. Machine learning subset (2 letters): <input type="text" class="clue-input" data-answer="ai"></div>
+                            <div class="clue-item">6. File extension for code (3 letters): <input type="text" class="clue-input" data-answer="cpp"></div>
+                            <div class="clue-item">7. Cloud service provider (5 letters): <input type="text" class="clue-input" data-answer="aws"></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" id="submitCrossword">Submit Puzzle</button>
+                    <div id="crosswordResult"></div>
+                </div>
+            </div>
+        </div>
+                
+        <!-- Timetable Section -->
+        <div class="content-section" id="timetable">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Weekly Timetable</div>
+                    <select class="form-input" style="width: auto;">
+                        <option>Week 1</option>
+                        <option>Week 2</option>
+                        <option>Week 3</option>
+                        <option>Week 4</option>
+                    </select>
+                </div>
+                <div class="timetable-grid">
+                    <div class="time-slot timetable-header">Time</div>
+                    <div class="timetable-header">Monday</div>
+                    <div class="timetable-header">Tuesday</div>
+                    <div class="timetable-header">Wednesday</div>
+                    <div class="timetable-header">Thursday</div>
+                    <div class="timetable-header">Friday</div>
+                    
+                    <div class="time-slot">9:00-10:30</div>
+                    <div class="timetable-cell subject">Data Structures<br><small>Room 302</small></div>
+                    <div class="timetable-cell subject">Algorithms<br><small>Room 405</small></div>
+                    <div class="timetable-cell subject">Web Dev<br><small>Lab 203</small></div>
+                    <div class="timetable-cell subject">DBMS<br><small>Room 301</small></div>
+                    <div class="timetable-cell subject">OS<br><small>Room 404</small></div>
+                    
+                    <div class="time-slot">10:30-11:00</div>
+                    <div class="timetable-cell break">Break</div>
+                    <div class="timetable-cell break">Break</div>
+                    <div class="timetable-cell break">Break</div>
+                    <div class="timetable-cell break">Break</div>
+                    <div class="timetable-cell break">Break</div>
+                    
+                    <div class="time-slot">11:00-12:30</div>
+                    <div class="timetable-cell subject">Algorithms<br><small>Room 405</small></div>
+                    <div class="timetable-cell subject">DBMS<br><small>Room 301</small></div>
+                    <div class="timetable-cell subject">Networks<br><small>Room 505</small></div>
+                    <div class="timetable-cell subject">Web Dev<br><small>Lab 203</small></div>
+                    <div class="timetable-cell subject">Data Structures<br><small>Room 302</small></div>
+                    
+                    <div class="time-slot">12:30-1:30</div>
+                    <div class="timetable-cell break">Lunch Break</div>
+                    <div class="timetable-cell break">Lunch Break</div>
+                    <div class="timetable-cell break">Lunch Break</div>
+                    <div class="timetable-cell break">Lunch Break</div>
+                    <div class="timetable-cell break">Lunch Break</div>
+                    
+                    <div class="time-slot">1:30-3:00</div>
+                    <div class="timetable-cell subject">Networks<br><small>Room 505</small></div>
+                    <div class="timetable-cell subject">OS<br><small>Room 404</small></div>
+                    <div class="timetable-cell subject">DBMS<br><small>Room 301</small></div>
+                    <div class="timetable-cell subject">Lab<br><small>Lab 101</small></div>
+                    <div class="timetable-cell subject">Seminar<br><small>Hall A</small></div>
+                    
+                    <div class="time-slot">3:00-4:30</div>
+                    <div class="timetable-cell subject">Lab<br><small>Lab 102</small></div>
+                    <div class="timetable-cell subject">Tutorial<br><small>Room 201</small></div>
+                    <div class="timetable-cell subject">Lab<br><small>Lab 203</small></div>
+                    <div class="timetable-cell subject">Project<br><small>Lab 101</small></div>
+                    <div class="timetable-cell">Free</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Today's Schedule Details</div>
+                </div>
+                <ul class="subject-list">
+                    <li class="subject-item">
+                        <div>
+                            <div><strong>Data Structures</strong></div>
+                            <div class="text-sm">9:00 AM - 10:30 AM | Room 302</div>
+                            <div class="text-sm">Topic: Binary Trees and Traversals</div>
+                            <div class="text-sm">Prof. Dr. Smith</div>
+                        </div>
+                        <span class="attendance-badge present">Attended</span>
+                    </li>
+                    <li class="subject-item">
+                        <div>
+                            <div><strong>Computer Networks</strong></div>
+                            <div class="text-sm">1:30 PM - 3:00 PM | Room 505</div>
+                            <div class="text-sm">Topic: TCP/IP Protocol Suite</div>
+                            <div class="text-sm">Prof. Johnson</div>
+                        </div>
+                        <span class="attendance-badge">Upcoming</span>
+                    </li>
+                    <li class="subject-item">
+                        <div>
+                            <div><strong>Web Development Lab</strong></div>
+                            <div class="text-sm">3:00 PM - 4:30 PM | Lab 203</div>
+                            <div class="text-sm">Assignment: React Components</div>
+                            <div class="text-sm">Siri</div>
+                        </div>
+                        <span class="attendance-badge">Upcoming</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Tasks Section -->
+        <div class="content-section" id="tasks">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Add New Task</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Task Title</label>
+                    <input type="text" class="form-input" id="taskTitle" placeholder="E.g., Complete Math Assignment">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Due Date</label>
+                    <input type="date" class="form-input" id="taskDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subject/Category</label>
+                    <select class="form-input" id="taskCategory">
+                        <option value="general">General</option>
+                        <option value="maths">Mathematics</option>
+                        <option value="english">English</option>
+                        <option value="quant">Quantitative Aptitude</option>
+                        <option value="reasoning">Logical Reasoning</option>
+                        <option value="placement">Placement Preparation</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="addTaskBtn" style="width: 100%;">Add Task</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Your Tasks</div>
+                </div>
+                <div id="tasksList">
+                    <div class="task-item">
+                        <input type="checkbox" class="task-checkbox">
+                        <div class="task-content">
+                            <div>Complete Math Assignment - Chapter 5</div>
+                            <div class="task-date">Due: Oct 20, 2023</div>
+                            <span class="subject-tag maths-tag">Maths</span>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <input type="checkbox" class="task-checkbox">
+                        <div class="task-content">
+                            <div>Prepare for English Presentation</div>
+                            <div class="task-date">Due: Oct 22, 2023</div>
+                            <span class="subject-tag english-tag">English</span>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <input type="checkbox" class="task-checkbox">
+                        <div class="task-content">
+                            <div>Solve Quantitative Aptitude Problems</div>
+                            <div class="task-date">Due: Oct 25, 2023</div>
+                            <span class="subject-tag quant-tag">Quant</span>
+                        </div>
+                    </div>
+                    <div class="task-item">
+                        <input type="checkbox" class="task-checkbox" checked>
+                        <div class="task-content">
+                            <div class="completed">Complete Web Development Project</div>
+                            <div class="task-date">Completed: Oct 15, 2023</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Calendar Section -->
+        <div class="content-section" id="calendar">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">October 2025</div>
+                    <div>
+                        <button class="btn btn-primary" id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                        <button class="btn btn-primary" id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="calendar" id="calendarDays">
+                    <div class="calendar-day timetable-header">Sun</div>
+                    <div class="calendar-day timetable-header">Mon</div>
+                    <div class="calendar-day timetable-header">Tue</div>
+                    <div class="calendar-day timetable-header">Wed</div>
+                    <div class="calendar-day timetable-header">Thu</div>
+                    <div class="calendar-day timetable-header">Fri</div>
+                    <div class="calendar-day timetable-header">Sat</div>
+                    
+                    <div class="calendar-day">1</div>
+                    <div class="calendar-day holiday" title="Gandhi Jayanti">2</div>
+                    <div class="calendar-day has-event" title="Assignment Due">3</div>
+                    <div class="calendar-day">4</div>
+                    <div class="calendar-day">5</div>
+                    <div class="calendar-day">6</div>
+                    <div class="calendar-day">7</div>
+                    <div class="calendar-day">8</div>
+                    <div class="calendar-day">9</div>
+                    <div class="calendar-day">10</div>
+                    <div class="calendar-day">11</div>
+                    <div class="calendar-day holiday" title="Dussehra">12</div>
+                    <div class="calendar-day">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day">15</div>
+                    <div class="calendar-day">16</div>
+                    <div class="calendar-day">17</div>
+                    <div class="calendar-day active has-event" title="Today">18</div>
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day has-event" title="Project Due">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day">22</div>
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day holiday" title="Diwali">24</div>
+                    <div class="calendar-day has-event" title="Midterm Exams Start">25</div>
+                    <div class="calendar-day">26</div>
+                    <div class="calendar-day">27</div>
+                    <div class="calendar-day">28</div>
+                    <div class="calendar-day">29</div>
+                    <div class="calendar-day">30</div>
+                    <div class="calendar-day holiday" title="Bhai Dooj">31</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Upcoming Events & Holidays</div>
+                </div>
+                <ul class="event-list">
+                    <li class="event-item task">
+                        <div><strong>Web Development Project</strong></div>
+                        <div>Due: Oct 20, 2025</div>
+                        <div class="text-sm">React-based e-commerce website</div>
+                    </li>
+                    <li class="event-item holiday">
+                        <div><strong>Diwali Festival</strong></div>
+                        <div>Oct 24, 2025</div>
+                        <div class="text-sm">College Holiday - No Classes</div>
+                    </li>
+                    <li class="event-item exam">
+                        <div><strong>Midterm Examinations Begin</strong></div>
+                        <div>Oct 25, 2025</div>
+                        <div class="text-sm">All subjects - Check exam schedule</div>
+                    </li>
+                    <li class="event-item placement">
+                        <div><strong>Google Campus Visit</strong></div>
+                        <div>Nov 5, 2025</div>
+                        <div class="text-sm">Pre-placement talk & process</div>
+                    </li>
+                    <li class="event-item holiday">
+                        <div><strong>Bhai Dooj</strong></div>
+                        <div>Oct 31, 2025</div>
+                        <div class="text-sm">Festival Holiday</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Task Reminders</div>
+                </div>
+                <ul class="event-list">
+                    <li class="event-item task">
+                        <div><strong>Assignment Reminder</strong></div>
+                        <div>DBMS Assignment due in 2 days</div>
+                        <div class="text-sm">Chapter 8-10 Questions</div>
+                    </li>
+                    <li class="event-item task">
+                        <div><strong>Lab Report Submission</strong></div>
+                        <div>Networks Lab Report due tomorrow</div>
+                        <div class="text-sm">Don't forget to include diagrams</div>
+                    </li>
+                    <li class="event-item exam">
+                        <div><strong>Quiz Alert</strong></div>
+                        <div>Data Structures quiz on Friday</div>
+                        <div class="text-sm">Trees & Graphs chapters</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Add Event to Calendar</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Event Title</label>
+                    <input type="text" class="form-input" id="eventTitle" placeholder="E.g., Exam, Holiday, etc.">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Event Date</label>
+                    <input type="date" class="form-input" id="eventDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Event Type</label>
+                    <select class="form-input" id="eventType">
+                        <option value="general">General</option>
+                        <option value="exam">Exam</option>
+                        <option value="holiday">Holiday</option>
+                        <option value="placement">Placement</option>
+                        <option value="task">Task Deadline</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="addEventBtn" style="width: 100%;">Add Event</button>
+            </div>
+        </div>
+        
+        <!-- Resources Section -->
+        <div class="content-section" id="resources">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Study Resources</div>
+                </div>
+                <div class="resource-grid">
+                    <div class="resource-card maths">
+                        <h3>Mathematics</h3>
+                        <div class="text-sm">Reference Books:</div>
+                        <ul>
+                            <li>Higher Engineering Mathematics by B.S. Grewal</li>
+                            <li>Advanced Engineering Mathematics by Erwin Kreyszig</li>
+                        </ul>
+                        <div class="text-sm">YouTube Channels:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-primary">3Blue1Brown</button>
+                            <button class="btn btn-primary">Khan Academy</button>
+                        </div>
+                        <div class="text-sm">Notes:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-secondary">Calculus</button>
+                            <button class="btn btn-secondary">Linear Algebra</button>
+                            <button class="btn btn-secondary">Probability</button>
+                        </div>
+                        <button class="btn btn-warning start-quiz" data-subject="maths">Start Quiz</button>
+                    </div>
+                    
+                    <div class="resource-card english">
+                        <h3>English</h3>
+                        <div class="text-sm">Reference Books:</div>
+                        <ul>
+                            <li>Word Power Made Easy by Norman Lewis</li>
+                            <li>High School English Grammar by Wren & Martin</li>
+                        </ul>
+                        <div class="text-sm">YouTube Channels:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-primary">Learn English with Emma</button>
+                            <button class="btn btn-primary">BBC Learning English</button>
+                        </div>
+                        <div class="text-sm">Notes:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-secondary">Grammar Rules</button>
+                            <button class="btn btn-secondary">Vocabulary</button>
+                            <button class="btn btn-secondary">Comprehension</button>
+                        </div>
+                        <button class="btn btn-warning start-quiz" data-subject="english">Start Quiz</button>
+                    </div>
+                    
+                    <div class="resource-card quant">
+                        <h3>Quantitative Aptitude</h3>
+                        <div class="text-sm">Reference Books:</div>
+                        <ul>
+                            <li>Quantitative Aptitude by R.S. Aggarwal</li>
+                            <li>Fast Track Objective Arithmetic by Rajesh Verma</li>
+                        </ul>
+                        <div class="text-sm">YouTube Channels:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-primary">Aptitude Made Easy</button>
+                            <button class="btn btn-primary">CareerRide</button>
+                        </div>
+                        <div class="text-sm">Notes:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-secondary">Number System</button>
+                            <button class="btn btn-secondary">Percentage</button>
+                            <button class="btn btn-secondary">Time & Work</button>
+                        </div>
+                        <button class="btn btn-warning start-quiz" data-subject="quant">Start Quiz</button>
+                    </div>
+                    
+                    <div class="resource-card reasoning">
+                        <h3>Logical Reasoning</h3>
+                        <div class="text-sm">Reference Books:</div>
+                        <ul>
+                            <li>A Modern Approach to Logical Reasoning by R.S. Aggarwal</li>
+                            <li>Analytical Reasoning by M.K. Pandey</li>
+                        </ul>
+                        <div class="text-sm">YouTube Channels:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-primary">Reasoning Tutorials</button>
+                            <button class="btn btn-primary">Adda247</button>
+                        </div>
+                        <div class="text-sm">Notes:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-secondary">Puzzles</button>
+                            <button class="btn btn-secondary">Syllogism</button>
+                            <button class="btn btn-secondary">Blood Relations</button>
+                        </div>
+                        <button class="btn btn-warning start-quiz" data-subject="reasoning">Start Quiz</button>
+                    </div>
+                    
+                    <div class="resource-card placement">
+                        <h3>Placement Preparation</h3>
+                        <div class="text-sm">Reference Books:</div>
+                        <ul>
+                            <li>Cracking the Coding Interview by Gayle Laakmann McDowell</li>
+                            <li>Introduction to Algorithms by Cormen</li>
+                        </ul>
+                        <div class="text-sm">YouTube Channels:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-primary">Take U Forward</button>
+                            <button class="btn btn-primary">Jenny's Lectures</button>
+                        </div>
+                        <div class="text-sm">Practice Platforms:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-warning">LeetCode</button>
+                            <button class="btn btn-warning">HackerRank</button>
+                            <button class="btn btn-warning">GeeksforGeeks</button>
+                        </div>
+                        <button class="btn btn-warning start-quiz" data-subject="placement">Start Quiz</button>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <h3>CS Fundamentals</h3>
+                        <div class="text-sm">Reference Books:</div>
+                        <ul>
+                            <li>Operating System Concepts by Silberschatz</li>
+                            <li>Database System Concepts by Silberschatz</li>
+                            <li>Computer Networks by Tanenbaum</li>
+                        </ul>
+                        <div class="text-sm">YouTube Channels:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-primary">Gate Smashers</button>
+                            <button class="btn btn-primary">Neso Academy</button>
+                        </div>
+                        <div class="text-sm">Notes:</div>
+                        <div class="resource-links">
+                            <button class="btn btn-secondary">OS Notes</button>
+                            <button class="btn btn-secondary">DBMS Notes</button>
+                            <button class="btn btn-secondary">CN Notes</button>
+                        </div>
+                        <button class="btn btn-warning start-quiz" data-subject="cs">Start Quiz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Reminders Section -->
+        <div class="content-section" id="reminders">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Exam Reminders</div>
+                </div>
+                <ul class="event-list">
+                    <li class="event-item exam">
+                        <div><strong>Data Structures Midterm</strong></div>
+                        <div>Oct 25, 2023 | 9:00 AM - 11:00 AM | Hall A</div>
+                        <div class="text-sm">Syllabus: Chapters 1-5</div>
+                    </li>
+                    <li class="event-item exam">
+                        <div><strong>Algorithms Theory Test</strong></div>
+                        <div>Oct 27, 2023 | 9:00 AM - 11:00 AM | Hall B</div>
+                        <div class="text-sm">Syllabus: Sorting Algorithms</div>
+                    </li>
+                    <li class="event-item exam">
+                        <div><strong>Web Development Practical</strong></div>
+                        <div>Oct 30, 2023 | 2:00 PM - 4:00 PM | Lab 3</div>
+                        <div class="text-sm">Build a responsive website</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Important Dates</div>
+                </div>
+                <ul class="event-list">
+                    <li class="event-item placement placement-highlight">
+                        <div><strong>Amazon Placement Drive</strong></div>
+                        <div>Nov 5, 2025 | Auditorium</div>
+                    </li>
+                    <li class="event-item holiday">
+                        <div><strong>Diwali Holiday</strong></div>
+                        <div>Nov 12, 2025</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Alarms Section -->
+        <div class="content-section" id="alarms">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Set New Alarm</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Alarm Time</label>
+                    <input type="time" class="form-input" id="alarmTime">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Alarm Label</label>
+                    <input type="text" class="form-input" id="alarmLabel" placeholder="E.g., Wake up for morning class">
+                </div>
+                <button class="btn btn-primary" id="addAlarmBtn" style="width: 100%;">Add Alarm</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Your Alarms</div>
+                </div>
+                <ul class="alarm-list">
+                    <li class="alarm-item">
+                        <div>
+                            <div class="alarm-time">07:00 AM</div>
+                            <div class="alarm-label">Morning Workout</div>
+                        </div>
+                        <div class="alarm-actions">
+                            <i class="fas fa-edit" style="color: var(--primary); cursor: pointer;"></i>
+                            <i class="fas fa-trash delete-alarm"></i>
+                        </div>
+                    </li>
+                    <li class="alarm-item">
+                        <div>
+                            <div class="alarm-time">08:30 AM</div>
+                            <div class="alarm-label">First Class Reminder</div>
+                        </div>
+                        <div class="alarm-actions">
+                            <i class="fas fa-edit" style="color: var(--primary); cursor: pointer;"></i>
+                            <i class="fas fa-trash delete-alarm"></i>
+                        </div>
+                    </li>
+                    <li class="alarm-item">
+                        <div>
+                            <div class="alarm-time">10:00 PM</div>
+                            <div class="alarm-label">Study Time</div>
+                        </div>
+                        <div class="alarm-actions">
+                            <i class="fas fa-edit" style="color: var(--primary); cursor: pointer;"></i>
+                            <i class="fas fa-trash delete-alarm"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Career Section -->
+        <div class="content-section" id="career">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Placement Preparation Roadmap</div>
+                </div>
+                <div class="roadmap-container">
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-step completed">
+                        <div class="roadmap-number">1</div>
+                        <div class="roadmap-content">
+                            <h4>Foundation Building</h4>
+                            <p>Complete basic programming concepts and data structures</p>
+                            <div class="text-sm">Status: Completed ✓</div>
+                        </div>
+                    </div>
+                    <div class="roadmap-step completed">
+                        <div class="roadmap-number">2</div>
+                        <div class="roadmap-content">
+                            <h4>Algorithm Mastery</h4>
+                            <p>Master sorting, searching, and graph algorithms</p>
+                            <div class="text-sm">Status: Completed ✓</div>
+                        </div>
+                    </div>
+                    <div class="roadmap-step current">
+                        <div class="roadmap-number">3</div>
+                        <div class="roadmap-content">
+                            <h4>Problem Solving Practice</h4>
+                            <p>Solve 100+ coding problems on platforms like LeetCode</p>
+                            <div class="text-sm">Status: In Progress (65/100)</div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="roadmap-step">
+                        <div class="roadmap-number">4</div>
+                        <div class="roadmap-content">
+                            <h4>System Design Basics</h4>
+                            <p>Learn fundamentals of system design and architecture</p>
+                            <div class="text-sm">Status: Not Started</div>
+                        </div>
+                    </div>
+                    <div class="roadmap-step">
+                        <div class="roadmap-number">5</div>
+                        <div class="roadmap-content">
+                            <h4>Mock Interviews</h4>
+                            <p>Practice technical and HR interviews</p>
+                            <div class="text-sm">Status: Upcoming</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Upcoming Placement Drives</div>
+                </div>
+                <ul class="event-list">
+                    <li class="event-item placement placement-highlight">
+                        <div><strong>Google</strong></div>
+                        <div>Nov 15, 2025 | Registration Deadline: Nov 1</div>
+                        <div class="text-sm">Positions: SDE Intern, SDE-1</div>
+                        <div class="text-sm">Package: ₹15-25 LPA</div>
+                    </li>
+                    <li class="event-item placement">
+                        <div><strong>Microsoft</strong></div>
+                        <div>Dec 2, 2025 | Registration Deadline: Nov 20</div>
+                        <div class="text-sm">Positions: Software Engineer</div>
+                        <div class="text-sm">Package: ₹18-28 LPA</div>
+                    </li>
+                    <li class="event-item placement">
+                        <div><strong>Amazon</strong></div>
+                        <div>Dec 10, 2023 | Registration Deadline: Nov 25</div>
+                        <div class="text-sm">Positions: SDE-1, SDE-2</div>
+                        <div class="text-sm">Package: ₹20-35 LPA</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Interview Preparation</div>
+                </div>
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <h4>Technical Interview</h4>
+                        <div class="text-sm">Topics to Focus:</div>
+                        <ul>
+                            <li>Data Structures & Algorithms</li>
+                            <li>System Design</li>
+                            <li>Database Management</li>
+                            <li>Operating Systems</li>
+                        </ul>
+                        <div class="text-sm">Practice Problems:</div>
+                        <ul>
+                            <li>What is the difference between array and linked list?</li>
+                            <li>Explain BFS and DFS.</li>
+                            <li>How does hashing work?</li>
+                        </ul>
+                        <div class="resource-links">
+                            <button class="btn btn-primary">More Problems</button>
+                            <button class="btn btn-secondary">Mock Tests</button>
+                            <button class="btn btn-warning">Video Tips</button>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <h4>HR Interview</h4>
+                        <div class="text-sm">Common Questions & Sample Answers:</div>
+                        <ul>
+                            <li>Tell me about yourself - "I'm a passionate CS student with experience in web development."</li>
+                            <li>Why this company? - "I admire the innovative culture and opportunities for growth."</li>
+                            <li>Strengths & Weaknesses - "Strength: Problem-solving; Weakness: Time management, but improving."</li>
+                            <li>Career Goals - "To become a senior software engineer in 5 years."</li>
+                        </ul>
+                        <div class="resource-links">
+                            <button class="btn btn-primary">More Samples</button>
+                            <button class="btn btn-secondary">Video Tips</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!-- Quiz Section -->
+<div class="content-section" id="quiz">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Quizzes by Subject</div>
+            <select class="form-input" id="quizSubjectSelector" style="width: auto;">
+                <option value="all">All Subjects</option>
+                <option value="maths">Mathematics</option>
+                <option value="english">English</option>
+                <option value="quant">Quantitative Aptitude</option>
+                <option value="reasoning">Logical Reasoning</option>
+                <option value="placement">Placement Preparation</option>
+                <option value="cs">CS Fundamentals</option>
+            </select>
+        </div>
+        <div class="resource-grid">
+            <div class="quiz-container" id="mathsQuiz">
+                <div class="quiz-question">What is the derivative of x^2?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option">x</div>
+                    <div class="quiz-option" data-correct="true">2x</div>
+                    <div class="quiz-option">x^3</div>
+                    <div class="quiz-option">1</div>
+                </div>
+                <button class="btn btn-primary check-answer">Check Answer</button>
+                <div class="quiz-result"></div>
+            </div>
+            <div class="quiz-container" id="englishQuiz">
+                <div class="quiz-question">What is a synonym for 'happy'?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option">Sad</div>
+                    <div class="quiz-option" data-correct="true">Joyful</div>
+                    <div class="quiz-option">Angry</div>
+                    <div class="quiz-option">Tired</div>
+                </div>
+                <button class="btn btn-primary check-answer">Check Answer</button>
+                <div class="quiz-result"></div>
+            </div>
+            <div class="quiz-container" id="quantQuiz">
+                <div class="quiz-question">What is 25% of 200?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option">25</div>
+                    <div class="quiz-option" data-correct="true">50</div>
+                    <div class="quiz-option">75</div>
+                    <div class="quiz-option">100</div>
+                </div>
+                <button class="btn btn-primary check-answer">Check Answer</button>
+                <div class="quiz-result"></div>
+            </div>
+            <div class="quiz-container" id="reasoningQuiz">
+                <div class="quiz-question">If CAT is coded as DOG, what is BAT coded as?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option">COW</div>
+                    <div class="quiz-option" data-correct="true">CDU</div>
+                    <div class="quiz-option">EAT</div>
+                    <div class="quiz-option">FOG</div>
+                </div>
+                <button class="btn btn-primary check-answer">Check Answer</button>
+                <div class="quiz-result"></div>
+            </div>
+            <div class="quiz-container" id="placementQuiz">
+                <div class="quiz-question">What is the time complexity of bubble sort?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option">O(n)</div>
+                    <div class="quiz-option" data-correct="true">O(n^2)</div>
+                    <div class="quiz-option">O(log n)</div>
+                    <div class="quiz-option">O(1)</div>
+                </div>
+                <button class="btn btn-primary check-answer">Check Answer</button>
+                <div class="quiz-result"></div>
+            </div>
+            <div class="quiz-container" id="csQuiz">
+                <div class="quiz-question">What does OS stand for?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option">Open System</div>
+                    <div class="quiz-option" data-correct="true">Operating System</div>
+                    <div class="quiz-option">Old System</div>
+                    <div class="quiz-option">Output System</div>
+                </div>
+                <button class="btn btn-primary check-answer">Check Answer</button>
+                <div class="quiz-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- Notes Section 
+        <div class="content-section" id="notes">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Special Notes</div>
+                </div>
+                <div class="notebook-container">
+                    <div class="notebook-page open">
+                        <textarea class="notes-textarea" id="notesText" placeholder="Write important points here..."></textarea>
+                    </div>
+                </div>
+                <div class="emoji-picker">
+                    <button class="btn btn-secondary add-emoji" data-emoji="😊">😊</button>
+                    <button class="btn btn-secondary add-emoji" data-emoji="👍">👍</button>
+                    <button class="btn btn-secondary add-emoji" data-emoji="⭐">⭐</button>
+                    <button class="btn btn-secondary add-emoji" data-emoji="📚">📚</button>
+                    <button class="btn btn-secondary add-emoji" data-emoji="💡">💡</button>
+                    <button class="btn btn-secondary add-emoji" data-emoji="🔥">🔥</button>
+                    <button class="btn btn-secondary add-emoji" data-emoji="✅">✅</button>
+                    <button class="btn btn-secondary add-emoji" data-emoji="❓">❓</button>
+                    <button class="btn btn-secondary add-emoji" data-emoji="🎯">🎯</button>
+                </div>
+            </div>
+        </div>-->
+
+        <!-- Profile Section -->
+        <div class="content-section" id="profile">
+            <div class="card">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2>Siri chandana</h2>
+                        <p>Student ID: 23BQ1A12C4</p>
+                        <p>Information Technology</p>
+                        <p>Semester 6 | CGPA: 8.7</p>
+                    </div>
+                </div>
+                
+                <div class="fees-card">
+                    <div class="fees-amount">₹1,25,000</div>
+                    <div class="fees-status">Annual Fees - Paid</div>
+                    <div class="fees-breakdown">
+                        <div class="fees-item">
+                            <span>Tuition Fees</span>
+                            <span>₹85,000</span>
+                        </div>
+                        <div class="fees-item">
+                            <span>Lab Fees</span>
+                            <span>₹15,000</span>
+                        </div>
+                        <div class="fees-item">
+                            <span>Library Fees</span>
+                            <span>₹5,000</span>
+                        </div>
+                        <div class="fees-item">
+                            <span>Development Fees</span>
+                            <span>₹10,000</span>
+                        </div>
+                        <div class="fees-item">
+                            <span>Exam Fees</span>
+                            <span>₹5,000</span>
+                        </div>
+                        <div class="fees-item">
+                            <span>Miscellaneous</span>
+                            <span>₹5,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Academic Progress</div>
+                </div>
+                <div class="resource-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: var(--secondary);">8.7</div>
+                        <div class="stat-label">Current CGPA</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: var(--primary);">85%</div>
+                        <div class="stat-label">Overall Attendance</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: var(--warning);">15</div>
+                        <div class="stat-label">Assignments Completed</div>
+                    </div>
+                </div>
+                
+                <div class="subject-attendance">
+                    <h4 style="margin: 1rem 0 0.5rem 0;">Semester-wise CGPA</h4>
+                    <div class="subject-attendance-item">
+                        <span>Semester 1: 8.2</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 82%;"></div>
+                        </div>
+                    </div>
+                    <div class="subject-attendance-item">
+                        <span>Semester 2: 8.5</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <div class="subject-attendance-item">
+                        <span>Semester 3: 8.8</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                    <div class="subject-attendance-item">
+                        <span>Semester 4: 8.6</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 86%;"></div>
+                        </div>
+                    </div>
+                    <div class="subject-attendance-item">
+                        <span>Semester 5: 8.9</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 89%;"></div>
+                        </div>
+                    </div>
+                    <div class="subject-attendance-item">
+                        <span>Semester 6: 8.7 (Current)</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 87%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Student Roadmap</div>
+                </div>
+                <div class="roadmap-container">
+                    <div class="roadmap-line"></div>
+                    <div class="roadmap-step completed">
+                        <div class="roadmap-number">1</div>
+                        <div class="roadmap-content">
+                            <h4>First Year Foundation</h4>
+                            <p>Complete basic courses in Mathematics, Physics, and Programming</p>
+                            <div class="text-sm">Completed: 2021-2022</div>
+                            <div class="text-sm">Achievement: Dean's List</div>
+                        </div>
+                    </div>
+                    <div class="roadmap-step completed">
+                        <div class="roadmap-number">2</div>
+                        <div class="roadmap-content">
+                            <h4>Second Year Core</h4>
+                            <p>Data Structures, Algorithms, Database Systems, Computer Networks</p>
+                            <div class="text-sm">Completed: 2022-2023</div>
+                            <div class="text-sm">Achievement: Best Project Award</div>
+                        </div>
+                    </div>
+                    <div class="roadmap-step current">
+                        <div class="roadmap-number">3</div>
+                        <div class="roadmap-content">
+                            <h4>Third Year Specialization</h4>
+                            <p>Advanced topics in Software Engineering, AI/ML, Web Development</p>
+                            <div class="text-sm">In Progress: 2023-2024</div>
+                            <div class="text-sm">Target: Internship at top tech company</div>
+                        </div>
+                    </div>
+                    <div class="roadmap-step">
+                        <div class="roadmap-number">4</div>
+                        <div class="roadmap-content">
+                            <h4>Final Year & Placement</h4>
+                            <p>Capstone project, placement preparation, job interviews</p>
+                            <div class="text-sm">Planned: 2024-2025</div>
+                            <div class="text-sm">Goal: Full-time offer from FAANG companies</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Personal Information</div>
+                </div>
+                <div class="resource-grid" style="grid-template-columns: 1fr;">
+                    <div class="resource-item">
+                        <strong>Email:</strong> sirichandana@gmail.com
+                    </div>
+                    <div class="resource-item">
+                        <strong>Phone:</strong> +91 7396860966
+                    </div>
+                    <div class="resource-item">
+                        <strong>Address:</strong> tenali.
+                    </div>
+                    <div class="resource-item">
+                        <strong>Emergency Contact:</strong> koteswara rao - +91 9876543211
+                    </div>
+                    <div class="resource-item">
+                        <strong>Blood Group:</strong> B+
+                    </div>
+                    <div class="resource-item">
+                        <strong>Date of Birth:</strong> December 5, 2005
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1rem;">
+                    <button class="btn btn-primary" style="margin-right: 0.5rem;">Edit Profile</button>
+                    <button class="btn btn-secondary">Download Transcript</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fas fa-wifi"></i> You're offline
+    </div>
+
+    <!-- Alarm Modal -->
+    <div class="modal" id="alarmModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Alarm Settings</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Time</label>
+                <input type="time" class="form-input" id="modalAlarmTime">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Label</label>
+                <input type="text" class="form-input" id="modalAlarmLabel" placeholder="Alarm description">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Repeat</label>
+                <select class="form-input" id="modalAlarmRepeat">
+                    <option value="once">Once</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekdays">Weekdays</option>
+                    <option value="weekends">Weekends</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" id="saveAlarm">Save Alarm</button>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                const targetSection = document.getElementById(tab.dataset.target);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                    if (tab.dataset.target === 'quiz') {
+                        const selector = document.getElementById('quizSubjectSelector');
+                        filterQuizzes(selector.value);
+                    }
+                }
+            });
+        });
+
+        // Clock functionality
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const dateString = now.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            
+            document.getElementById('currentTime').textContent = timeString;
+            document.getElementById('currentDate').textContent = dateString;
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Game functionality
+        const startGameBtn = document.getElementById('startGame');
+        const gameArea = document.getElementById('gameArea');
+        const gameTimer = document.getElementById('gameTimer');
+        const submitCrossword = document.getElementById('submitCrossword');
+        const crosswordResult = document.getElementById('crosswordResult');
+        let gameTimeLeft = 600; // 10 minutes
+        let gameInterval;
+        
+        function checkGameAccess() {
+            const lastPlay = localStorage.getItem('lastGamePlay');
+            const now = Date.now();
+            if (lastPlay && now - parseInt(lastPlay) < 3600000) { // less than 1 hour
+                alert('Game locked. Wait until next hour.');
+                return false;
+            }
+            return true;
+        }
+        
+        function startGameTimer() {
+            gameInterval = setInterval(() => {
+                gameTimeLeft--;
+                const minutes = Math.floor(gameTimeLeft / 60);
+                const seconds = gameTimeLeft % 60;
+                gameTimer.textContent = `Time left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (gameTimeLeft <= 0) {
+                    clearInterval(gameInterval);
+                    gameArea.style.display = 'none';
+                    localStorage.setItem('lastGamePlay', Date.now());
+                    alert('Time up! Game locked for this hour.');
+                }
+            }, 1000);
+        }
+        
+        startGameBtn.addEventListener('click', () => {
+            if (checkGameAccess()) {
+                gameArea.style.display = 'block';
+                startGameTimer();
+            }
+        });
+        
+        submitCrossword.addEventListener('click', () => {
+            const inputs = document.querySelectorAll('.clue-input');
+            let correctCount = 0;
+            inputs.forEach(input => {
+                if (input.value.toLowerCase() === input.dataset.answer.toLowerCase()) {
+                    correctCount++;
+                }
+            });
+            crosswordResult.textContent = `You got ${correctCount} out of ${inputs.length} correct!`;
+            crosswordResult.style.display = 'block';
+        });
+
+        // Quiz functionality
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        document.querySelectorAll('.check-answer').forEach(button => {
+            button.addEventListener('click', function() {
+                const container = this.parentElement;
+                const selectedOption = container.querySelector('.quiz-option.selected');
+                const resultDiv = container.querySelector('.quiz-result');
+                
+                if (selectedOption) {
+                    const isCorrect = selectedOption.dataset.correct === 'true';
+                    resultDiv.style.display = 'block';
+                    
+                    if (isCorrect) {
+                        resultDiv.className = 'quiz-result correct';
+                        resultDiv.textContent = 'Correct!';
+                    } else {
+                        resultDiv.className = 'quiz-result incorrect';
+                        const correctOption = container.querySelector('.quiz-option[data-correct="true"]');
+                        resultDiv.textContent = `Incorrect. The correct answer is ${correctOption.textContent}.`;
+                    }
+                } else {
+                    resultDiv.style.display = 'block';
+                    resultDiv.className = 'quiz-result incorrect';
+                    resultDiv.textContent = 'Please select an option.';
+                }
+            });
+        });
+
+        // Start quiz from resources
+        document.querySelectorAll('.start-quiz').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const subject = btn.dataset.subject;
+                const quizTab = document.querySelector('[data-target="quiz"]');
+                quizTab.click();
+                const selector = document.getElementById('quizSubjectSelector');
+                selector.value = subject;
+                filterQuizzes(subject);
+            });
+        });
+
+        // Quiz filter function
+        function filterQuizzes(subject) {
+            document.querySelectorAll('.quiz-container').forEach(q => {
+                if (subject === 'all' || q.id === `${subject}Quiz`) {
+                    q.style.display = 'block';
+                } else {
+                    q.style.display = 'none';
+                }
+            });
+        }
+
+        // Quiz selector change
+        const quizSelector = document.getElementById('quizSubjectSelector');
+        if (quizSelector) {
+            quizSelector.addEventListener('change', (e) => filterQuizzes(e.target.value));
+        }
+
+        // Task management
+        document.getElementById('addTaskBtn').addEventListener('click', function() {
+            const title = document.getElementById('taskTitle').value;
+            const date = document.getElementById('taskDate').value;
+            const category = document.getElementById('taskCategory').value;
+            
+            if (title && date) {
+                const tasksList = document.getElementById('tasksList');
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item';
+                
+                const categoryClass = category + '-tag';
+                const formattedDate = new Date(date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                taskItem.innerHTML = `
+                    <input type="checkbox" class="task-checkbox">
+                    <div class="task-content">
+                        <div>${title}</div>
+                        <div class="task-date">Due: ${formattedDate}</div>
+                        <span class="subject-tag ${categoryClass}">${category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                    </div>
+                `;
+                
+                tasksList.appendChild(taskItem);
+                document.getElementById('taskTitle').value = '';
+                document.getElementById('taskDate').value = '';
+                document.getElementById('taskCategory').value = 'general';
+            }
+        });
+
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('task-checkbox')) {
+                const taskContent = e.target.nextElementSibling;
+                const firstDiv = taskContent.querySelector('div');
+                
+                if (e.target.checked) {
+                    firstDiv.classList.add('completed');
+                } else {
+                    firstDiv.classList.remove('completed');
+                }
+            }
+        });
+
+        // Alarm management
+        document.getElementById('addAlarmBtn').addEventListener('click', function() {
+            const time = document.getElementById('alarmTime').value;
+            const label = document.getElementById('alarmLabel').value;
+            
+            if (time) {
+                const alarmsList = document.querySelector('.alarm-list');
+                const alarmItem = document.createElement('li');
+                alarmItem.className = 'alarm-item';
+                
+                const timeObj = new Date(`2000-01-01 ${time}`);
+                const formattedTime = timeObj.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                alarmItem.innerHTML = `
+                    <div>
+                        <div class="alarm-time">${formattedTime}</div>
+                        <div class="alarm-label">${label || 'No description'}</div>
+                    </div>
+                    <div class="alarm-actions">
+                        <i class="fas fa-edit" style="color: var(--primary); cursor: pointer;"></i>
+                        <i class="fas fa-trash delete-alarm"></i>
+                    </div>
+                `;
+                
+                alarmsList.appendChild(alarmItem);
+                document.getElementById('alarmTime').value = '';
+                document.getElementById('alarmLabel').value = '';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-alarm')) {
+                e.target.closest('.alarm-item').remove();
+            }
+        });
+
+        // Notes functionality
+        const notesText = document.getElementById('notesText');
+        const notesCanvas = document.getElementById('notesCanvas');
+        const clearNotesCanvas = document.getElementById('clearNotesCanvas');
+        const saveNotes = document.getElementById('saveNotes');
+        const notesCtx = notesCanvas.getContext('2d');
+        let notesPainting = false;
+        
+        notesCanvas.addEventListener('mousedown', () => notesPainting = true);
+        notesCanvas.addEventListener('mouseup', () => notesPainting = false);
+        notesCanvas.addEventListener('mousemove', (e) => {
+            if (notesPainting) {
+                notesCtx.lineTo(e.clientX - notesCanvas.offsetLeft, e.clientY - notesCanvas.offsetTop);
+                notesCtx.stroke();
+            }
+        });
+        
+        clearNotesCanvas.addEventListener('click', () => {
+            notesCtx.clearRect(0, 0, notesCanvas.width, notesCanvas.height);
+        });
+        
+        document.querySelectorAll('.add-emoji').forEach(btn => {
+            btn.addEventListener('click', () => {
+                notesText.value += btn.dataset.emoji;
+            });
+        });
+        
+        saveNotes.addEventListener('click', () => {
+            localStorage.setItem('savedNotes', notesText.value);
+            alert('Notes saved!');
+        });
+        
+        // Load saved notes
+        notesText.value = localStorage.getItem('savedNotes') || '';
+
+        // Calendar navigation (stub)
+        document.getElementById('prevMonth')?.addEventListener('click', () => console.log('Previous month'));
+        document.getElementById('nextMonth')?.addEventListener('click', () => console.log('Next month'));
+
+        // Event management
+        document.getElementById('addEventBtn')?.addEventListener('click', function() {
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const type = document.getElementById('eventType').value;
+            
+            if (title && date) {
+                alert(`Event "${title}" added for ${date}`);
+                document.getElementById('eventTitle').value = '';
+                document.getElementById('eventDate').value = '';
+                document.getElementById('eventType').value = 'general';
+            }
+        });
+
+        // Offline detection
+        window.addEventListener('online', () => document.getElementById('offlineIndicator').style.display = 'none');
+        window.addEventListener('offline', () => document.getElementById('offlineIndicator').style.display = 'block');
+
+        console.log('UniSync Academic Companion loaded successfully!');
+    </script>
+</body>
+</html>

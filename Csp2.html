@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uppalapadu HealthConnect</title>
+    <style>
+        /* Previous CSS remains the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.2;
+            animation: blob 7s infinite;
+        }
+
+        .blob1 {
+            width: 320px;
+            height: 320px;
+            background: #a855f7;
+            top: -160px;
+            right: -160px;
+        }
+
+        .blob2 {
+            width: 320px;
+            height: 320px;
+            background: #ec4899;
+            bottom: -160px;
+            left: -160px;
+            animation-delay: 2s;
+        }
+
+        .blob3 {
+            width: 320px;
+            height: 320px;
+            background: #3b82f6;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 4s;
+        }
+
+        @keyframes blob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.5), rgba(236, 72, 153, 0.5));
+            backdrop-filter: blur(16px);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #ec4899, #a855f7);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 0 40px rgba(236, 72, 153, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+
+        .tagline {
+            color: #e9d5ff;
+            margin-top: 0.5rem;
+        }
+
+        /* Card 3D */
+        .card-3d {
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.15), rgba(139, 92, 246, 0.1));
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 60px rgba(168, 85, 247, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-3d:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 80px rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+
+        /* Language Buttons */
+        .lang-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .lang-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.4), rgba(124, 58, 237, 0.3));
+            border: 2px solid rgba(168, 85, 247, 0.3);
+            color: #e9d5ff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .lang-button:hover {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.5), rgba(168, 85, 247, 0.4));
+            border-color: rgba(168, 85, 247, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(168, 85, 247, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .lang-button.active {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border-color: #c084fc;
+            color: white;
+            box-shadow: 
+                0 0 30px rgba(168, 85, 247, 0.6),
+                0 4px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        /* Symptom Grid */
+        .symptom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .symptom-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
+            border: 2px solid rgba(147, 51, 234, 0.3);
+            color: #c7d2fe;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .symptom-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(236, 72, 153, 0.2));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .symptom-card:hover::before {
+            opacity: 1;
+        }
+
+        .symptom-card:hover {
+            transform: translateY(-4px) scale(1.05);
+            border-color: rgba(147, 51, 234, 0.6);
+            box-shadow: 
+                0 8px 30px rgba(147, 51, 234, 0.4),
+                0 0 40px rgba(147, 51, 234, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .symptom-card.selected {
+            background: linear-gradient(135deg, #9333ea, #ec4899);
+            border-color: #f0abfc;
+            color: white;
+            box-shadow: 
+                0 0 40px rgba(147, 51, 234, 0.8),
+                0 8px 30px rgba(236, 72, 153, 0.4),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .symptom-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .symptom-card span {
+            font-size: 0.875rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Textarea */
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 2px solid rgba(168, 85, 247, 0.3);
+            color: white;
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 
+                inset 0 2px 10px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        textarea::placeholder {
+            color: rgba(233, 213, 255, 0.5);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 25px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .action-button:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #6d28d9, #9333ea);
+            box-shadow: 
+                0 6px 25px rgba(124, 58, 237, 0.4),
+                0 0 40px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #2563eb, #0891b2);
+            box-shadow: 
+                0 6px 25px rgba(59, 130, 246, 0.4),
+                0 0 40px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #f97316);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #b91c1c, #ea580c);
+            box-shadow: 
+                0 6px 25px rgba(220, 38, 38, 0.4),
+                0 0 40px rgba(249, 115, 22, 0.3);
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #475569, #64748b);
+        }
+
+        .btn-clear:hover {
+            background: linear-gradient(135deg, #334155, #475569);
+        }
+
+        /* Advice Box */
+        .advice-box {
+            padding: 1.5rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+            border-left: 4px solid #3b82f6;
+            color: #bfdbfe;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            box-shadow: 
+                inset 0 2px 10px rgba(0, 0, 0, 0.2),
+                0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .contact-box {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.1));
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .contact-box h3 {
+            color: #4ade80;
+            margin-bottom: 1rem;
+        }
+
+        .contact-box p {
+            margin-bottom: 0.5rem;
+            color: #bbf7d0;
+        }
+
+        /* Emergency Card */
+        .emergency-card {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(249, 115, 22, 0.15));
+            border-color: rgba(220, 38, 38, 0.3);
+        }
+
+        .emergency-card .section-title {
+            background: linear-gradient(135deg, #fca5a5, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .emergency-text {
+            color: #fecaca;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* Service Cards */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            padding: 1.5rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.2), rgba(124, 58, 237, 0.15));
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 
+                0 8px 30px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(168, 85, 247, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .service-card h3 {
+            color: #c084fc;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .service-card p {
+            color: #e9d5ff;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .service-button {
+            padding: 0.625rem 1.25rem;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(168, 85, 247, 0.4));
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            color: #e9d5ff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-button:hover {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border-color: #c084fc;
+            transform: translateY(-2px);
+            box-shadow: 
+                0 4px 15px rgba(168, 85, 247, 0.4),
+                0 0 20px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.95), rgba(124, 58, 237, 0.95));
+            backdrop-filter: blur(16px);
+            padding: 2rem;
+            border-radius: 24px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: #fbbf24;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: #e9d5ff;
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: all 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #fbbf24;
+            transform: scale(1.2);
+        }
+
+        .modal-lang-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 3rem;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(168, 85, 247, 0.3);
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        footer p {
+            color: #c084fc;
+            margin-bottom: 0.5rem;
+        }
+
+        footer p:last-child {
+            color: #a78bfa;
+            font-size: 0.875rem;
+        }
+
+        /* NEW STYLES FOR ADDED FEATURES */
+        
+        /* Health Tips Grid */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(147, 51, 234, 0.3);
+        }
+
+        .tip-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .tip-card h4 {
+            color: #c084fc;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-card p {
+            color: #e9d5ff;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Vaccination Schedule */
+        .vaccine-schedule {
+            margin-top: 1.5rem;
+        }
+
+        .vaccine-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .vaccine-table th, .vaccine-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .vaccine-table th {
+            background: rgba(88, 28, 135, 0.3);
+            color: #c084fc;
+            font-weight: 600;
+        }
+
+        .vaccine-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Doctor Profiles */
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .doctor-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            text-align: center;
+        }
+
+        .doctor-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 3px solid #a855f7;
+        }
+
+        .doctor-card h4 {
+            color: #c084fc;
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-specialty {
+            color: #e9d5ff;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .doctor-contact {
+            color: #86efac;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Map Container */
+        .map-container {
+            margin-top: 1.5rem;
+            border-radius: 16px;
+            overflow: hidden;
+            height: 300px;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .map-placeholder {
+            padding: 2rem;
+            text-align: center;
+            color: #c084fc;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .symptom-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .action-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .vaccine-table {
+                font-size: 0.8rem;
+            }
+
+            .vaccine-table th, .vaccine-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">❤️</div>
+            <div>
+                <h1 id="mainTitle">Uppalapadu HealthConnect</h1>
+                <p class="tagline" id="tagline">Empowering villagers with multilingual AI-driven healthcare guidance</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Language Selection -->
+        <section class="card-3d">
+            <h2 class="section-title" id="langTitle">Select Your Language</h2>
+            <div class="lang-container">
+                <button class="lang-button active" onclick="changeLanguage('en')">English</button>
+                <button class="lang-button" onclick="changeLanguage('te')">తెలుగు</button>
+                <button class="lang-button" onclick="changeLanguage('hi')">हिन्दी</button>
+                <button class="lang-button" onclick="openModal()">Other Languages</button>
+            </div>
+        </section>
+
+        <!-- Add Symptoms -->
+        <section class="card-3d">
+            <h2 class="section-title" id="symptomsTitle">Add Symptoms</h2>
+            <div class="symptom-grid">
+                <div class="symptom-card" onclick="toggleSymptom('fever')">
+                    <div class="icon">🌡️</div>
+                    <span id="symptom-fever">Fever</span>
+                </div>
+                <div class="symptom-card" onclick="toggleSymptom('cold')">
+                    <div class="icon">🤧</div>
+                    <span id="symptom-cold">Cold</span>
+                </div>
+                <div class="symptom-card" onclick="toggleSymptom('cough')">
+                    <div class="icon">😷</div>
+                    <span id="symptom-cough">Cough</span>
+                </div>
+                <div class="symptom-card" onclick="toggleSymptom('headache')">
+                    <div class="icon">🧠</div>
+                    <span id="symptom-headache">Headache</span>
+                </div>
+                <div class="symptom-card" onclick="toggleSymptom('stomach')">
+                    <div class="icon">💊</div>
+                    <span id="symptom-stomach">Stomach Pain</span>
+                </div>
+                <div class="symptom-card" onclick="toggleSymptom('skin')">
+                    <div class="icon">🩹</div>
+                    <span id="symptom-skin">Skin Issues</span>
+                </div>
+            </div>
+
+            <textarea id="symptomText" placeholder="Describe your symptoms in your language"></textarea>
+
+            <div class="button-group">
+                <button class="action-button btn-secondary" onclick="voiceInput()">
+                    🎤 <span id="btnVoice">Voice Input</span>
+                </button>
+                <button class="action-button btn-primary" onclick="analyzeSymptoms()">
+                    📤 <span id="btnAnalyze">Get Health Guidance</span>
+                </button>
+                <button class="action-button btn-clear" onclick="clearAll()">
+                    🗑️ <span id="btnClear">Clear</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Guidance Output -->
+        <section class="card-3d">
+            <h2 class="section-title" id="guidanceTitle">Guidance & Recommendation</h2>
+            <div class="advice-box" id="adviceBox">
+                Please describe your symptoms to get guidance.
+            </div>
+            <div class="contact-box" id="contactBox" style="display: none;">
+                <h3 id="contactTitle">Contact Healthcare Providers</h3>
+                <div id="contactList"></div>
+            </div>
+        </section>
+
+        <!-- Emergency Section -->
+        <section class="card-3d emergency-card">
+            <h2 class="section-title" id="emergencyTitle">Emergency Help</h2>
+            <p class="emergency-text" id="emergencyText">
+                If you're experiencing severe symptoms like chest pain, difficulty breathing, or severe bleeding, seek immediate medical attention.
+            </p>
+            <div class="button-group">
+                <button class="action-button btn-danger" onclick="callEmergency()">
+                    📞 <span id="btnEmergency">Call Emergency (108)</span>
+                </button>
+                <button class="action-button btn-danger" onclick="findHospital()">
+                    📍 <span id="btnHospital">Find Nearest Hospital</span>
+                </button>
+            </div>
+            
+            <!-- Hospital Map Section -->
+            <div id="hospitalMapSection" style="display: none; margin-top: 1.5rem;">
+                <h3 id="nearestHospitalTitle">Nearest Hospital</h3>
+                <div class="map-container">
+                    <div class="map-placeholder" id="mapPlaceholder">
+                        Loading map...
+                    </div>
+                </div>
+                <div id="hospitalDetails" style="margin-top: 1rem;"></div>
+            </div>
+        </section>
+
+        <!-- Health Schemes -->
+        <section class="card-3d">
+            <h2 class="section-title" id="schemesTitle">Health Schemes & Services</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <h3 id="scheme1Title">Aarogyasri Scheme</h3>
+                    <p id="scheme1Desc">Free hospital treatments for eligible families</p>
+                    <button class="service-button" id="scheme1Btn" onclick="showSchemeDetails('aarogyasri')">Learn More</button>
+                </div>
+                <div class="service-card">
+                    <h3 id="scheme2Title">Village Health Clinic</h3>
+                    <p id="scheme2Desc">Contact your local ASHA worker for assistance</p>
+                    <button class="service-button" id="scheme2Btn" onclick="showSchemeDetails('villageClinic')">Find ASHA Worker</button>
+                </div>
+                <div class="service-card">
+                    <h3 id="scheme3Title">Telemedicine Services</h3>
+                    <p id="scheme3Desc">Connect with doctors remotely for consultations</p>
+                    <button class="service-button" id="scheme3Btn" onclick="showSchemeDetails('telemedicine')">Start Consultation</button>
+                </div>
+            </div>
+            
+            <!-- Scheme Details Section -->
+            <div id="schemeDetails" style="display: none; margin-top: 1.5rem;">
+                <div class="advice-box" id="schemeDetailsContent"></div>
+            </div>
+        </section>
+
+        <!-- Preventive Care -->
+        <section class="card-3d">
+            <h2 class="section-title" id="preventiveTitle">Preventive Healthcare</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <h3 id="preventive1Title">Vaccination Schedule</h3>
+                    <p id="preventive1Desc">Check recommended vaccination timelines for all ages</p>
+                    <button class="service-button" id="preventive1Btn" onclick="showVaccinationSchedule()">View Schedule</button>
+                </div>
+                <div class="service-card">
+                    <h3 id="preventive2Title">Health Tips</h3>
+                    <p id="preventive2Desc">Learn about nutrition, hygiene, and disease prevention</p>
+                    <button class="service-button" id="preventive2Btn" onclick="showHealthTips()">View Tips</button>
+                </div>
+            </div>
+            
+            <!-- Vaccination Schedule Section -->
+            <div id="vaccinationSchedule" style="display: none; margin-top: 1.5rem;">
+                <h3 id="vaccinationTitle">Vaccination Schedule</h3>
+                <div class="vaccine-schedule">
+                    <table class="vaccine-table">
+                        <thead>
+                            <tr>
+                                <th id="vaccineAge">Age</th>
+                                <th id="vaccineName">Vaccine</th>
+                                <th id="vaccineDate">Next Available Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vaccineTableBody">
+                            <!-- Vaccine data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Health Tips Section -->
+            <div id="healthTips" style="display: none; margin-top: 1.5rem;">
+                <h3 id="healthTipsTitle">Health Tips</h3>
+                <div class="tips-grid" id="tipsGrid">
+                    <!-- Health tips will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Local Doctors Section -->
+        <section class="card-3d">
+            <h2 class="section-title" id="doctorsTitle">Local Healthcare Providers</h2>
+            <div class="doctors-grid" id="doctorsGrid">
+                <!-- Doctor profiles will be populated by JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p id="footer1">Uppalapadu HealthConnect - A Community Health Initiative</p>
+        <p id="footer2">This platform provides preliminary guidance only. Always consult a healthcare professional for medical advice.</p>
+    </footer>
+
+    <!-- Other Languages Modal -->
+    <div class="modal" id="langModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Select Your Language</h2>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-lang-grid">
+                <button class="lang-button" onclick="changeLanguage('ta'); closeModal();">தமிழ்</button>
+                <button class="lang-button" onclick="changeLanguage('kn'); closeModal();">ಕನ್ನಡ</button>
+                <button class="lang-button" onclick="changeLanguage('ml'); closeModal();">മലയാളം</button>
+                <button class="lang-button" onclick="changeLanguage('bn'); closeModal();">বাংলা</button>
+                <button class="lang-button" onclick="changeLanguage('mr'); closeModal();">मराठी</button>
+                <button class="lang-button" onclick="changeLanguage('gu'); closeModal();">ગુજરાતી</button>
+                <button class="lang-button" onclick="changeLanguage('or'); closeModal();">ଓଡ଼ିଆ</button>
+                <button class="lang-button" onclick="changeLanguage('pa'); closeModal();">ਪੰਜਾਬੀ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Previous JavaScript code remains the same
+        // Translations object
+        const translations = {
+            en: {
+                // Previous translations remain the same
+                // Adding new translations for the new features
+                nearestHospitalTitle: "Nearest Hospital",
+                doctorsTitle: "Local Healthcare Providers",
+                vaccineAge: "Age",
+                vaccineName: "Vaccine",
+                vaccineDate: "Next Available Date",
+                healthTipsTitle: "Health Tips",
+                vaccinationTitle: "Vaccination Schedule",
+                // Health tips
+                tip1Title: "Boil Drinking Water",
+                tip1Desc: "Always boil water before drinking to kill harmful bacteria and prevent waterborne diseases.",
+                tip2Title: "Tulasi (Holy Basil) Water",
+                tip2Desc: "Drink Tulasi water daily to boost immunity and relieve cold and cough symptoms.",
+                tip3Title: "Citrus Fruits for Cold",
+                tip3Desc: "Eat citrus fruits like oranges and lemons rich in Vitamin C to fight cold and flu.",
+                tip4Title: "Buttermilk for Dehydration",
+                tip4Desc: "Drink buttermilk with a pinch of salt to rehydrate and restore electrolytes.",
+                tip5Title: "Mint Leaves for Digestion",
+                tip5Desc: "Chew mint leaves or drink mint tea to aid digestion and relieve stomach issues.",
+                tip6Title: "Hand Hygiene",
+                tip6Desc: "Wash hands regularly with soap to prevent the spread of germs and infections.",
+                // Vaccination schedule
+                vaccine1: "At Birth",
+                vaccine2: "6 Weeks",
+                vaccine3: "10 Weeks",
+                vaccine4: "14 Weeks",
+                vaccine5: "9-12 Months",
+                vaccine6: "16-24 Months",
+                vaccine7: "5-6 Years",
+                vaccine8: "10-12 Years",
+                vaccine9: "Pregnant Women",
+                // Doctor information
+                doctor1Name: "Dr. Rajesh Kumar",
+                doctor1Specialty: "General Physician",
+                doctor1Contact: "Phone: 9876543210",
+                doctor2Name: "Dr. Priya Sharma",
+                doctor2Specialty: "Pediatrician",
+                doctor2Contact: "Phone: 9876543211",
+                doctor3Name: "Dr. Anil Reddy",
+                doctor3Specialty: "Dermatologist",
+                doctor3Contact: "Phone: 9876543212",
+                doctor4Name: "Dr. Sunita Patel",
+                doctor4Specialty: "Gynecologist",
+                doctor4Contact: "Phone: 9876543213",
+                // Scheme details
+                aarogyasriDetails: "Aarogyasri provides cashless treatment for below poverty line families. Covers over 900 medical procedures including heart, cancer, and neurological treatments. Contact your local Aarogyamithra for enrollment.",
+                villageClinicDetails: "Our village health clinic operates Monday to Saturday, 9 AM to 4 PM. ASHA workers provide maternal care, immunization, and basic health services. Emergency services available 24/7.",
+                telemedicineDetails: "Connect with specialists via video consultation. Available daily 8 AM to 8 PM. Download our app or call 1800-123-4567 to book an appointment."
+            },
+            te: {
+                // Telugu translations for all the new content
+                nearestHospitalTitle: "దగ్గరి ఆసుపత్రి",
+                doctorsTitle: "స్థానిక ఆరోగ్య సంరక్షణ ప్రదాతలు",
+                vaccineAge: "వయస్సు",
+                vaccineName: "వ్యాక్సిన్",
+                vaccineDate: "తదుపరి అందుబాటులో ఉన్న తేదీ",
+                healthTipsTitle: "ఆరోగ్య చిట్కాలు",
+                vaccinationTitle: "టీకాల షెడ్యూల్",
+                // Health tips
+                tip1Title: "త్రాగే నీటిని ఉడకబెట్టండి",
+                tip1Desc: "హానికరమైన బ్యాక్టీరియాను చంపడానికి మరియు నీటి ద్వారా వచ్చే వ్యాధులను నివారించడానికి త్రాగే ముందు నీటిని ఎల్లప్పుడూ ఉడకబెట్టండి.",
+                tip2Title: "తులసి నీరు",
+                tip2Desc: "రోగనిరోధక శక్తిని పెంపొందించడానికి మరియు జలుబు మరియు దగ్గు లక్షణాలను తగ్గించడానికి రోజుకు తులసి నీరు తాగండి.",
+                tip3Title: "జలుబుకు సిట్రస్ పండ్లు",
+                tip3Desc: "జలుబు మరియు ఫ్లూ నుండి కాపాడటానికి విటమిన్ సి తో కూడిన నారింజ మరియు నిమ్మకాయలు వంటి సిట్రస్ పండ్లను తినండి.",
+                tip4Title: "నిర్జలీకరణకు మజ్జిగ",
+                tip4Desc: "నిర్జలీకరణను తగ్గించడానికి మరియు ఎలక్ట్రోలైట్లను పునరుద్ధరించడానికి ఒక చిటికెడు ఉప్పుతో మజ్జిగ తాగండి.",
+                tip5Title: "జీర్ణక్రియకు పుదీనా ఆకులు",
+                tip5Desc: "జీర్ణక్రియకు సహాయపడటానికి మరియు కడుపు సమస్యలను తగ్గించడానికి పుదీనా ఆకులను నమిలండి లేదా పుదీనా టీ తాగండి.",
+                tip6Title: "చేతి శుభ్రత",
+                tip6Desc: "క్రిములు మరియు ఇన్ఫెక్షన్ల వ్యాప్తిని నివారించడానికి సబ్బుతో క్రమం తప్పకుండా చేతులు కడుకోండి.",
+                // Vaccination schedule
+                vaccine1: "పుట్టినప్పుడు",
+                vaccine2: "6 వారాలు",
+                vaccine3: "10 వారాలు",
+                vaccine4: "14 వారాలు",
+                vaccine5: "9-12 నెలలు",
+                vaccine6: "16-24 నెలలు",
+                vaccine7: "5-6 సంవత్సరాలు",
+                vaccine8: "10-12 సంవత్సరాలు",
+                vaccine9: "గర్భిణీ స్త్రీలు",
+                // Doctor information
+                doctor1Name: "డాక్టర్ రాజేష్ కుమార్",
+                doctor1Specialty: "జనరల్ ఫిజీషియన్",
+                doctor1Contact: "ఫోన్: 9876543210",
+                doctor2Name: "డాక్టర్ ప్రియా శర్మ",
+                doctor2Specialty: "పీడియాట్రీషియన్",
+                doctor2Contact: "ఫోన్: 9876543211",
+                doctor3Name: "డాక్టర్ అనిల్ రెడ్డి",
+                doctor3Specialty: "డెర్మటాలజిస్ట్",
+                doctor3Contact: "ఫోన్: 9876543212",
+                doctor4Name: "డాక్టర్ సునీతా పటేల్",
+                doctor4Specialty: "గైనకాలజిస్ట్",
+                doctor4Contact: "ఫోన్: 9876543213",
+                // Scheme details
+                aarogyasriDetails: "ఆరోగ్యశ్రీ దారిద్ర్య రేఖకు దిగువన ఉన్న కుటుంబాలకు నగదు లేని చికిత్సను అందిస్తుంది. గుండె, క్యాన్సర్ మరియు న్యూరాలజికల్ చికిత్సలతో సహా 900 కి పైగా వైద్య పద్ధతులను కవర్ చేస్తుంది. నమోదు కోసం మీ స్థానిక ఆరోగ్యమిత్రను సంప్రదించండి.",
+                villageClinicDetails: "మా గ్రామ ఆరోగ్య క్లినిక్ సోమవారం నుండి శనివారం, ఉదయం 9 నుండి మధ్యాహ్నం 4 వరకు పని చేస్తుంది. ఆశా కార్యకర్తలు ప్రసూతి సంరక్షణ, టీకాకరణ మరియు ప్రాథమిక ఆరోగ్య సేవలను అందిస్తారు. అత్యవసర సేవలు 24/7 అందుబాటులో ఉంటాయి.",
+                telemedicineDetails: "వీడియో సంప్రదింపు ద్వారా నిపుణులతో కనెక్ట్ అవ్వండి. రోజుకు ఉదయం 8 నుండి రాత్రి 8 వరకు అందుబాటులో ఉంటుంది. అపాయింట్మెంట్ బుక్ చేయడానికి మా యాప్ని డౌన్లోడ్ చేసుకోండి లేదా 1800-123-4567 కి కాల్ చేయండి."
+            },
+            hi: {
+                // Hindi translations for all the new content
+                nearestHospitalTitle: "निकटतम अस्पताल",
+                doctorsTitle: "स्थानीय स्वास्थ्य सेवा प्रदाता",
+                vaccineAge: "आयु",
+                vaccineName: "टीका",
+                vaccineDate: "अगली उपलब्ध तिथि",
+                healthTipsTitle: "स्वास्थ्य युक्तियाँ",
+                vaccinationTitle: "टीकाकरण अनुसूची",
+                // Health tips
+                tip1Title: "पीने का पानी उबालें",
+                tip1Desc: "हानिकारक बैक्टीरिया को मारने और जलजनित बीमारियों को रोकने के लिए पीने से पहले पानी को हमेशा उबालें।",
+                tip2Title: "तुलसी का पानी",
+                tip2Desc: "प्रतिरक्षा को बढ़ावा देने और सर्दी और खांसी के लक्षणों से राहत पाने के लिए रोज तुलसी का पानी पिएं।",
+                tip3Title: "सर्दी के लिए सिट्रस फल",
+                tip3Desc: "सर्दी और फ्लू से लड़ने के लिए विटामिन सी से भरपूर संतरे और नींबू जैसे सिट्रस फल खाएं।",
+                tip4Title: "निर्जलीकरण के लिए छाछ",
+                tip4Desc: "रीहाइड्रेट करने और इलेक्ट्रोलाइट्स को बहाल करने के लिए एक चुटकी नमक के साथ छाछ पिएं।",
+                tip5Title: "पाचन के लिए पुदीने की पत्तियां",
+                tip5Desc: "पाचन में सहायता और पेट की समस्याओं से राहत के लिए पुदीने की पत्तियां चबाएं या पुदीने की चाय पिएं।",
+                tip6Title: "हाथ की स्वच्छता",
+                tip6Desc: "कीटाणुओं और संक्रमणों के प्रसार को रोकने के लिए नियमित रूप से साबुन से हाथ धोएं।",
+                // Vaccination schedule
+                vaccine1: "जन्म के समय",
+                vaccine2: "6 सप्ताह",
+                vaccine3: "10 सप्ताह",
+                vaccine4: "14 सप्ताह",
+                vaccine5: "9-12 महीने",
+                vaccine6: "16-24 महीने",
+                vaccine7: "5-6 साल",
+                vaccine8: "10-12 साल",
+                vaccine9: "गर्भवती महिलाएं",
+                // Doctor information
+                doctor1Name: "डॉ. राजेश कुमार",
+                doctor1Specialty: "सामान्य चिकित्सक",
+                doctor1Contact: "फोन: 9876543210",
+                doctor2Name: "डॉ. प्रिया शर्मा",
+                doctor2Specialty: "बाल रोग विशेषज्ञ",
+                doctor2Contact: "फोन: 9876543211",
+                doctor3Name: "डॉ. अनिल रेड्डी",
+                doctor3Specialty: "त्वचा रोग विशेषज्ञ",
+                doctor3Contact: "फोन: 9876543212",
+                doctor4Name: "डॉ. सुनीता पटेल",
+                doctor4Specialty: "स्त्री रोग विशेषज्ञ",
+                doctor4Contact: "फोन: 9876543213",
+                // Scheme details
+                aarogyasriDetails: "आरोग्यश्री गरीबी रेखा से नीचे के परिवारों के लिए कैशलेस उपचार प्रदान करता है। हृदय, कैंसर और न्यूरोलॉजिकल उपचार सहित 900 से अधिक चिकित्सा प्रक्रियाओं को कवर करता है। नामांकन के लिए अपने स्थानीय आरोग्यमित्र से संपर्क करें।",
+                villageClinicDetails: "हमारा ग्राम स्वास्थ्य क्लिनिक सोमवार से शनिवार, सुबह 9 बजे से शाम 4 बजे तक संचालित होता है। आशा कार्यकर्ता मातृ देखभाल, टीकाकरण और बुनियादी स्वास्थ्य सेवाएं प्रदान करते हैं। आपातकालीन सेवाएं 24/7 उपलब्ध हैं।",
+                telemedicineDetails: "वीडियो परामर्श के माध्यम से विशेषज्ञों से जुड़ें। दैनिक सुबह 8 बजे से रात 8 बजे तक उपलब्ध। अपॉइंटमेंट बुक करने के लिए हमारा ऐप डाउनलोड करें या 1800-123-4567 पर कॉल करें।"
+            }
+            // Other language translations would follow the same pattern
+        };
+
+        let currentLang = 'en';
+        let selectedSymptoms = [];
+
+        // Change Language
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            
+            // Update all text elements
+            document.getElementById('mainTitle').textContent = t.mainTitle;
+            document.getElementById('tagline').textContent = t.tagline;
+            document.getElementById('langTitle').textContent = t.langTitle;
+            document.getElementById('symptomsTitle').textContent = t.symptomsTitle;
+            document.getElementById('symptomText').placeholder = t.symptomPlaceholder;
+            document.getElementById('btnVoice').textContent = t.btnVoice;
+            document.getElementById('btnAnalyze').textContent = t.btnAnalyze;
+            document.getElementById('btnClear').textContent = t.btnClear;
+            document.getElementById('guidanceTitle').textContent = t.guidanceTitle;
+            document.getElementById('adviceBox').textContent = t.initialGuidance;
+            document.getElementById('contactTitle').textContent = t.contactTitle;
+            document.getElementById('emergencyTitle').textContent = t.emergencyTitle;
+            document.getElementById('emergencyText').textContent = t.emergencyText;
+            document.getElementById('btnEmergency').textContent = t.btnEmergency;
+            document.getElementById('btnHospital').textContent = t.btnHospital;
+            document.getElementById('schemesTitle').textContent = t.schemesTitle;
+            document.getElementById('scheme1Title').textContent = t.scheme1Title;
+            document.getElementById('scheme1Desc').textContent = t.scheme1Desc;
+            document.getElementById('scheme1Btn').textContent = t.scheme1Btn;
+            document.getElementById('scheme2Title').textContent = t.scheme2Title;
+            document.getElementById('scheme2Desc').textContent = t.scheme2Desc;
+            document.getElementById('scheme2Btn').textContent = t.scheme2Btn;
+            document.getElementById('scheme3Title').textContent = t.scheme3Title;
+            document.getElementById('scheme3Desc').textContent = t.scheme3Desc;
+            document.getElementById('scheme3Btn').textContent = t.scheme3Btn;
+            document.getElementById('preventiveTitle').textContent = t.preventiveTitle;
+            document.getElementById('preventive1Title').textContent = t.preventive1Title;
+            document.getElementById('preventive1Desc').textContent = t.preventive1Desc;
+            document.getElementById('preventive1Btn').textContent = t.preventive1Btn;
+            document.getElementById('preventive2Title').textContent = t.preventive2Title;
+            document.getElementById('preventive2Desc').textContent = t.preventive2Desc;
+            document.getElementById('preventive2Btn').textContent = t.preventive2Btn;
+            document.getElementById('footer1').textContent = t.footer1;
+            document.getElementById('footer2').textContent = t.footer2;
+
+            // Update symptom labels
+            document.getElementById('symptom-fever').textContent = t.symptoms.fever;
+            document.getElementById('symptom-cold').textContent = t.symptoms.cold;
+            document.getElementById('symptom-cough').textContent = t.symptoms.cough;
+            document.getElementById('symptom-headache').textContent = t.symptoms.headache;
+            document.getElementById('symptom-stomach').textContent = t.symptoms.stomach;
+            document.getElementById('symptom-skin').textContent = t.symptoms.skin;
+
+            // Update new elements
+            document.getElementById('nearestHospitalTitle').textContent = t.nearestHospitalTitle;
+            document.getElementById('doctorsTitle').textContent = t.doctorsTitle;
+            document.getElementById('vaccineAge').textContent = t.vaccineAge;
+            document.getElementById('vaccineName').textContent = t.vaccineName;
+            document.getElementById('vaccineDate').textContent = t.vaccineDate;
+            document.getElementById('healthTipsTitle').textContent = t.healthTipsTitle;
+            document.getElementById('vaccinationTitle').textContent = t.vaccinationTitle;
+
+            // Update active language button
+            document.querySelectorAll('.lang-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update dynamic content
+            updateVaccinationSchedule();
+            updateHealthTips();
+            updateDoctorsList();
+        }
+
+        // Toggle Symptom
+        function toggleSymptom(symptom) {
+            const card = event.target.closest('.symptom-card');
+            
+            if (selectedSymptoms.includes(symptom)) {
+                selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+                card.classList.remove('selected');
+            } else {
+                selectedSymptoms.push(symptom);
+                card.classList.add('selected');
+            }
+        }
+
+        // Analyze Symptoms
+        function analyzeSymptoms() {
+            const text = document.getElementById('symptomText').value.trim();
+            
+            if (selectedSymptoms.length === 0 && !text) {
+                alert(currentLang === 'en' ? 'Please select symptoms or describe them' :
+                      currentLang === 'te' ? 'దయచేసి లక్షణాలను ఎంచుకోండి లేదా వర్ణించండి' :
+                      'कृपया लक्षण चुनें या उनका वर्णन करें');
+                return;
+            }
+
+            const adviceBox = document.getElementById('adviceBox');
+            const contactBox = document.getElementById('contactBox');
+            const contactList = document.getElementById('contactList');
+
+            adviceBox.textContent = 'Analyzing...';
+
+            setTimeout(() => {
+                let advice = '';
+                let contacts = '';
+
+                if (selectedSymptoms.includes('fever') || text.toLowerCase().includes('fever') || 
+                    text.includes('జ్వరం') || text.includes('बुखार')) {
+                    advice = currentLang === 'en' 
+                        ? "You reported a fever. If you also have cough or breathlessness, visit a hospital immediately. Otherwise, rest and hydrate. Take paracetamol for fever relief."
+                        : currentLang === 'te'
+                        ? "మీరు జ్వరం గురించి నివేదించారు. మీకు దగ్గు లేదా శ్వాసకోశ సమస్యలు కూడా ఉంటే, వెంటనే ఆసుపత్రికి వెళ్లండి. లేకపోతే, విశ్రాంతి తీసుకోండి మరియు ఎక్కువ నీరు తాగండి."
+                        : "आपने बुखार की सूचना दी। यदि आपको खांसी या सांस की तकलीफ भी है, तो तुरंत अस्पताल जाएं। अन्यथा, आराम करें और हाइड्रेटेड रहें।";
+                    
+                    contacts = currentLang === 'en'
+                        ? "<p><strong>Dr. Rajesh Kumar</strong> - General Physician - 9876543210</p><p><strong>Uppalapadu Primary Health Center</strong> - 08642-123456</p>"
+                        : currentLang === 'te'
+                        ? "<p><strong>డాక్టర్ రాజేష్ కుమార్</strong> - జనరల్ ఫిజీషియన్ - 9876543210</p><p><strong>ఉప్పలపాడు ప్రాథమిక ఆరోగ్య కేంద్రం</strong> - 08642-123456</p>"
+                        : "<p><strong>डॉ. राजेश कुमार</strong> - सामान्य चिकित्सक - 9876543210</p><p><strong>उप्पलापाडु प्राथमिक स्वास्थ्य केंद्र</strong> - 08642-123456</p>";
+                } else if (selectedSymptoms.includes('cold') || text.toLowerCase().includes('cold') ||
+                           text.includes('జలుబు') || text.includes('जुकाम')) {
+                    advice = currentLang === 'en'
+                        ? "You reported a cold. Rest well, drink warm fluids, and use steam inhalation for relief. If symptoms persist for more than a week, consult a doctor."
+                        : currentLang === 'te'
+                        ? "మీరు జలుబు గురించి నివేదించారు. బాగా విశ్రాంతి తీసుకోండి, వెచ్చని ద్రవాలు తాగండి మరియు ఆవిరి శ్వాస ఉపయోగించండి."
+                        : "आपने जुकाम की सूचना दी। अच्छी तरह आराम करें, गर्म तरल पदार्थ पिएं और भाप का उपयोग करें।";
+                    
+                    contacts = currentLang === 'en'
+                        ? "<p><strong>Dr. Priya Sharma</strong> - General Physician - 9876543211</p>"
+                        : currentLang === 'te'
+                        ? "<p><strong>డాక్టర్ ప్రియా శర్మ</strong> - జనరల్ ఫిజీషియన్ - 9876543211</p>"
+                        : "<p><strong>डॉ. प्रिया शर्मा</strong> - सामान्य चिकित्सक - 9876543211</p>";
+                } else {
+                    advice = currentLang === 'en'
+                        ? "Symptoms recognized. For persistent or worsening symptoms, visit the nearest health worker or hospital. Maintain proper hygiene and follow a balanced diet."
+                        : currentLang === 'te'
+                        ? "లక్షణాలు గుర్తించబడ్డాయి. నిరంతర లేదా మరింత దిగజారుతున్న లక్షణాల కోసం, సమీపంలోని ఆరోగ్య కార్యకర్త లేదా ఆసుపత్రిని సందర్శించండి."
+                        : "लक्षण पहचाने गए। लगातार या बिगड़ते लक्षणों के लिए, निकटतम स्वास्थ्य कार्यकर्ता या अस्पताल जाएं।";
+                    
+                    contacts = currentLang === 'en'
+                        ? "<p><strong>Uppalapadu Primary Health Center</strong> - 08642-123456</p>"
+                        : currentLang === 'te'
+                        ? "<p><strong>ఉప్పలపాడు ప్రాథమిక ఆరోగ్య కేంద్రం</strong> - 08642-123456</p>"
+                        : "<p><strong>उप्पलापाडु प्राथमिक स्वास्थ्य केंद्र</strong> - 08642-123456</p>";
+                }
+
+                adviceBox.textContent = advice;
+                contactList.innerHTML = contacts;
+                contactBox.style.display = 'block';
+            }, 1500);
+        }
+
+        // Clear All
+        function clearAll() {
+            document.getElementById('symptomText').value = '';
+            selectedSymptoms = [];
+            document.querySelectorAll('.symptom-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById('adviceBox').textContent = translations[currentLang].initialGuidance;
+            document.getElementById('contactBox').style.display = 'none';
+        }
+
+        // Voice Input
+        function voiceInput() {
+            alert(translations[currentLang].btnVoice + ' - Feature coming soon!');
+        }
+
+        // Emergency Functions
+        function callEmergency() {
+            window.location.href = 'tel:108';
+        }
+
+        function findHospital() {
+            const mapSection = document.getElementById('hospitalMapSection');
+            const mapPlaceholder = document.getElementById('mapPlaceholder');
+            const hospitalDetails = document.getElementById('hospitalDetails');
+            
+            mapSection.style.display = 'block';
+            mapPlaceholder.innerHTML = '<h3>Uppalapadu Primary Health Center</h3><p>Distance: 2.5 km</p><p>Estimated travel time: 10 minutes</p>';
+            
+            const t = translations[currentLang];
+            hospitalDetails.innerHTML = `
+                <p><strong>${t.nearestHospitalTitle}: Uppalapadu Primary Health Center</strong></p>
+                <p>Address: Main Road, Uppalapadu, Andhra Pradesh 523112</p>
+                <p>Phone: 08642-123456</p>
+                <p>Emergency Services: 24/7</p>
+                <p>Specialties: General Medicine, Pediatrics, Emergency Care</p>
+            `;
+        }
+
+        // Modal Functions
+        function openModal() {
+            document.getElementById('langModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('langModal').classList.remove('active');
+        }
+
+        // NEW FUNCTIONS FOR ADDED FEATURES
+
+        // Show scheme details
+        function showSchemeDetails(scheme) {
+            const detailsSection = document.getElementById('schemeDetails');
+            const detailsContent = document.getElementById('schemeDetailsContent');
+            const t = translations[currentLang];
+            
+            detailsSection.style.display = 'block';
+            
+            if (scheme === 'aarogyasri') {
+                detailsContent.textContent = t.aarogyasriDetails;
+            } else if (scheme === 'villageClinic') {
+                detailsContent.textContent = t.villageClinicDetails;
+            } else if (scheme === 'telemedicine') {
+                detailsContent.textContent = t.telemedicineDetails;
+            }
+        }
+
+        // Show vaccination schedule
+        function showVaccinationSchedule() {
+            const scheduleSection = document.getElementById('vaccinationSchedule');
+            scheduleSection.style.display = 'block';
+            updateVaccinationSchedule();
+        }
+
+        // Update vaccination schedule based on language
+        function updateVaccinationSchedule() {
+            const t = translations[currentLang];
+            const tableBody = document.getElementById('vaccineTableBody');
+            
+            // Sample vaccination data
+            const vaccineData = [
+                { age: t.vaccine1, name: "BCG, OPV-0, Hepatitis B-1", date: "15 Nov 2023" },
+                { age: t.vaccine2, name: "OPV-1, Pentavalent-1, Rotavirus-1", date: "27 Dec 2023" },
+                { age: t.vaccine3, name: "OPV-2, Pentavalent-2, Rotavirus-2", date: "31 Jan 2024" },
+                { age: t.vaccine4, name: "OPV-3, Pentavalent-3, Rotavirus-3", date: "6 Mar 2024" },
+                { age: t.vaccine5, name: "Measles-Rubella-1, Japanese Encephalitis-1", date: "15 Aug 2024" },
+                { age: t.vaccine6, name: "DPT Booster-1, OPV Booster, Measles-Rubella-2", date: "15 Feb 2025" },
+                { age: t.vaccine7, name: "DPT Booster-2", date: "15 Jan 2028" },
+                { age: t.vaccine8, name: "TT/Td", date: "15 Jan 2033" },
+                { age: t.vaccine9, name: "TT-1, TT-2, TT Booster", date: "20 Dec 2023" }
+            ];
+            
+            tableBody.innerHTML = '';
+            vaccineData.forEach(vaccine => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${vaccine.age}</td>
+                    <td>${vaccine.name}</td>
+                    <td>${vaccine.date}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Show health tips
+        function showHealthTips() {
+            const tipsSection = document.getElementById('healthTips');
+            tipsSection.style.display = 'block';
+            updateHealthTips();
+        }
+
+        // Update health tips based on language
+        function updateHealthTips() {
+            const t = translations[currentLang];
+            const tipsGrid = document.getElementById('tipsGrid');
+            
+            // Sample health tips with placeholder images
+            const tipsData = [
+                { 
+                    title: t.tip1Title, 
+                    desc: t.tip1Desc,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23581c87'/%3E%3Ctext x='100' y='75' font-family='Arial' font-size='18' fill='white' text-anchor='middle'%3EBoiling Water%3C/text%3E%3C/svg%3E"
+                },
+                { 
+                    title: t.tip2Title, 
+                    desc: t.tip2Desc,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23581c87'/%3E%3Ctext x='100' y='75' font-family='Arial' font-size='18' fill='white' text-anchor='middle'%3ETulasi Water%3C/text%3E%3C/svg%3E"
+                },
+                { 
+                    title: t.tip3Title, 
+                    desc: t.tip3Desc,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23581c87'/%3E%3Ctext x='100' y='75' font-family='Arial' font-size='18' fill='white' text-anchor='middle'%3ECitrus Fruits%3C/text%3E%3C/svg%3E"
+                },
+                { 
+                    title: t.tip4Title, 
+                    desc: t.tip4Desc,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23581c87'/%3E%3Ctext x='100' y='75' font-family='Arial' font-size='18' fill='white' text-anchor='middle'%3EButtermilk%3C/text%3E%3C/svg%3E"
+                },
+                { 
+                    title: t.tip5Title, 
+                    desc: t.tip5Desc,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23581c87'/%3E%3Ctext x='100' y='75' font-family='Arial' font-size='18' fill='white' text-anchor='middle'%3EMint Leaves%3C/text%3E%3C/svg%3E"
+                },
+                { 
+                    title: t.tip6Title, 
+                    desc: t.tip6Desc,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150' viewBox='0 0 200 150'%3E%3Crect width='200' height='150' fill='%23581c87'/%3E%3Ctext x='100' y='75' font-family='Arial' font-size='18' fill='white' text-anchor='middle'%3EHand Washing%3C/text%3E%3C/svg%3E"
+                }
+            ];
+            
+            tipsGrid.innerHTML = '';
+            tipsData.forEach(tip => {
+                const tipCard = document.createElement('div');
+                tipCard.className = 'tip-card';
+                tipCard.innerHTML = `
+                    <img src="${tip.image}" alt="${tip.title}" class="tip-image">
+                    <h4>${tip.title}</h4>
+                    <p>${tip.desc}</p>
+                `;
+                tipsGrid.appendChild(tipCard);
+            });
+        }
+
+        // Update doctors list based on language
+        function updateDoctorsList() {
+            const t = translations[currentLang];
+            const doctorsGrid = document.getElementById('doctorsGrid');
+            
+            // Sample doctors data with placeholder images
+            const doctorsData = [
+                { 
+                    name: t.doctor1Name, 
+                    specialty: t.doctor1Specialty,
+                    contact: t.doctor1Contact,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23a855f7'/%3E%3Ctext x='60' y='65' font-family='Arial' font-size='14' fill='white' text-anchor='middle'%3EDoctor%3C/text%3E%3C/svg%3E"
+                },
+                { 
+                    name: t.doctor2Name, 
+                    specialty: t.doctor2Specialty,
+                    contact: t.doctor2Contact,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23a855f7'/%3E%3Ctext x='60' y='65' font-family='Arial' font-size='14' fill='white' text-anchor='middle'%3EDoctor%3C/text%3E%3C/svg%3E"
+                },
+                { 
+                    name: t.doctor3Name, 
+                    specialty: t.doctor3Specialty,
+                    contact: t.doctor3Contact,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23a855f7'/%3E%3Ctext x='60' y='65' font-family='Arial' font-size='14' fill='white' text-anchor='middle'%3EDoctor%3C/text%3E%3C/svg%3E"
+                },
+                { 
+                    name: t.doctor4Name, 
+                    specialty: t.doctor4Specialty,
+                    contact: t.doctor4Contact,
+                    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23a855f7'/%3E%3Ctext x='60' y='65' font-family='Arial' font-size='14' fill='white' text-anchor='middle'%3EDoctor%3C/text%3E%3C/svg%3E"
+                }
+            ];
+            
+            doctorsGrid.innerHTML = '';
+            doctorsData.forEach(doctor => {
+                const doctorCard = document.createElement('div');
+                doctorCard.className = 'doctor-card';
+                doctorCard.innerHTML = `
+                    <img src="${doctor.image}" alt="${doctor.name}" class="doctor-photo">
+                    <h4>${doctor.name}</h4>
+                    <p class="doctor-specialty">${doctor.specialty}</p>
+                    <p class="doctor-contact">${doctor.contact}</p>
+                `;
+                doctorsGrid.appendChild(doctorCard);
+            });
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('langModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Initialize the page with default content
+        document.addEventListener('DOMContentLoaded', function() {
+            updateVaccinationSchedule();
+            updateHealthTips();
+            updateDoctorsList();
+        });
+    </script>
+</body>
+</html>
